@@ -24,3 +24,5 @@ Figures have to be made as vector graphics (.pdf). Matplotlib.pyplot can be forc
 ### Problem 8 (Plotting and table making)
 
 ### Problem 9 (Programming and FLOPs)
+
+### Problem 10 (Programming and plotting)
