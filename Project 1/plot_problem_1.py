@@ -22,7 +22,7 @@ def plot(x, u):
     plt.plot(x, u)
     plt.xlabel('x')
     plt.ylabel('u')
-    plt.savefig('problem_1.png')
+    plt.savefig('problem_1.pdf')
     plt.show()
 
 
