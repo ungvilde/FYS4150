@@ -65,5 +65,5 @@ int main()
 
 // define exact solution
 double u(double x){
-    return 1 - (1 - exp(-10.)*x - exp(-10*x));
+    return 1 - (1 - exp(-10.))*x - exp(-10*x);
 }
