@@ -12,6 +12,7 @@
 #include <fstream>
 
 
+// declare function for exact solution
 double u(double x);
 
 int main()
