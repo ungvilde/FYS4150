@@ -40,7 +40,7 @@ double u(double x)
 
 double f(double x)
 {
-    return 100*exp(-10*x);
+    return 100.*exp(-10*x);
 }
 
 // Return a string with a double in scientific notation (NOTE: written by Anders)

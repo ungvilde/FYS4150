@@ -19,6 +19,7 @@ def readfile(filename):
 def plot(x, u, save=False):
     """Plot an array of x and u values."""
     plt.plot(x, u)
+
     plt.xlabel(r'$x$')
     plt.ylabel(r'$u(x)$')
     if save:
@@ -27,5 +28,7 @@ def plot(x, u, save=False):
 
 
 if __name__ == '__main__':
-    x, u = readfile("data.txt")
-    plot(x, u)
+    #x, u = readfile("data.txt")
+    x, v = readfile("approx.txt")
+    h = 1/100
+    plot(x, v)
