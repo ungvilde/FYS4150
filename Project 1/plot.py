@@ -1,3 +1,4 @@
+from cProfile import label
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -16,19 +17,21 @@ def readfile(filename):
     return np.array(x), np.array(u)
 
 
-def plot(x, u, save=False):
+def plot(x, u, v, save=False):
     """Plot an array of x and u values."""
-    plt.plot(x, u)
+    plt.plot(x, u, label="$u$")
+    plt.plot(x, v, label= "$v$")
 
     plt.xlabel(r'$x$')
     plt.ylabel(r'$u(x)$')
+    plt.legend()
     if save:
         plt.savefig('problem_1.pdf')
     plt.show()
 
 
 if __name__ == '__main__':
-    #x, u = readfile("data.txt")
+    _, u = readfile("data.txt")
     x, v = readfile("approx.txt")
-    h = 1/100
-    plot(x, v)
+    
+    plot(x, u[1:], v)
