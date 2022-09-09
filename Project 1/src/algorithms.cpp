@@ -13,8 +13,8 @@ std::vector< std::vector<double> > general_algorithm(
     double h // stepsize
     )
 {
-    std::vector<double> v(N);
-    std::vector<double> xvalues(N);
+    std::vector<double> v(N); // vector for approx uvalues
+    std::vector<double> xvalues(N); // xvalues ranging from h to N*h
 
     double alpha; // variable used to compute a_i/b_{i-1}
     xvalues[0] = h;

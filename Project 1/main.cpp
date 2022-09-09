@@ -28,7 +28,6 @@ int main()
     datavalues.push_back(uvalues);
     write_file("data.txt", datavalues);
 
-    std::cout << N << std::endl;
     // prepare matrix equation
     std::vector<double> g(N);
     //std::vector<double> gtilde(N);
@@ -41,7 +40,6 @@ int main()
 
     std::vector<double> v(N);
     
-
     for(int i=0; i<N; i++)
     {
         g[i] = h*h*f(xvalues[i]); // compute rhs of equation
