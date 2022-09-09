@@ -23,6 +23,8 @@ int main()
         xvalues[i] = xvalues[i-1] + h;
         uvalues[i] = u(xvalues[i]);
     }
+    uvalues[N] = 0.; //ensure correct boundary value
+
     // save in data file
     std::vector< std::vector<double> > datavalues;
     datavalues.push_back(xvalues);
@@ -31,7 +33,7 @@ int main()
 
     int Nsteps = 10; // number of steps excluding boundary points x=0 and x=1
     // now we make approximation
-    while(Nsteps < 10000)
+    while(Nsteps <= 10000000) //10**7
     {
     h = 1./Nsteps;
     // prepare matrix equation
@@ -40,7 +42,7 @@ int main()
     std::vector<double> a(Nsteps-1, -1.);
     std::vector<double> c(Nsteps-1, -1.);
     std::vector<double> v(Nsteps);
-    double x = 0;
+    double x = h;
     for(int i=0; i<Nsteps; i++)
     {
         g[i] = h*h*f(x); // compute rhs of equation
