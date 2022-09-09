@@ -42,3 +42,4 @@ if __name__ == '__main__':
     plt.ylabel(r'$u(x)$')
     plt.legend()
     plt.savefig('figs/problem7.pdf')
+    
