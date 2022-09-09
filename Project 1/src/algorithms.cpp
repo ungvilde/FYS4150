@@ -22,18 +22,21 @@ std::vector< std::vector<double> > general_algorithm(
     for(int i=1; i<N; i++)
     {
         // forward substitution
-        alpha = a[i]/b[i-1];
-        b[i] = b[i] - alpha*c[i-1];
-        g[i] = g[i] - alpha*g[i-1];
+        alpha = a[i]/b[i-1]; // 1 FLOP
+        b[i] = b[i] - alpha*c[i-1]; //2 FLOPs
+        g[i] = g[i] - alpha*g[i-1]; //2 FLOPs
         xvalues[i] = xvalues[i-1] + h;
     }
 
-    v[N-1] = g[N-1]/b[N-1];
+    v[N-1] = g[N-1]/b[N-1]; // 1 FLOPs
+
     for(int i=N-2; i>=0; i--)
     {
         // backward substitution
-        v[i] = (g[i] - c[i]*v[i+1])/b[i];
+        v[i] = (g[i] - c[i]*v[i+1])/b[i]; //3 FLOPs
     }
+
+    //Total: 8*n + 1 FLOPs
 
     std::vector< std::vector<double> > approxvalues;
     approxvalues.push_back(xvalues);
