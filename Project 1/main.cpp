@@ -29,9 +29,10 @@ int main()
     datavalues.push_back(uvalues);
     write_file("data.txt", datavalues);
 
-
+    int Nsteps = 10; // number of steps excluding boundary points x=0 and x=1
     // now we make approximation
-    int Nsteps = 1000; // number of steps excluding boundary points x=0 and x=1
+    while(Nsteps < 10000)
+    {
     h = 1./Nsteps;
     // prepare matrix equation
     std::vector<double> g(Nsteps);
@@ -40,7 +41,6 @@ int main()
     std::vector<double> c(Nsteps-1, -1.);
     std::vector<double> v(Nsteps);
     double x = 0;
-
     for(int i=0; i<Nsteps; i++)
     {
         g[i] = h*h*f(x); // compute rhs of equation
@@ -50,7 +50,10 @@ int main()
     std::vector< std::vector<double> > approxvalues = general_algorithm(a,b,c,g, Nsteps, h);  
     approxvalues[0].insert(approxvalues[0].begin(), 0.); // add x=0 and v=0 to include boundry conditions
     approxvalues[1].insert(approxvalues[1].begin(), 0.);
-    write_file("approx.txt", approxvalues);
+    std::string filename = "approx" +  std::to_string(Nsteps) + ".txt";
+    write_file(filename, approxvalues);
+    Nsteps=Nsteps*10;
+    }
 
     return 0;
 }

@@ -1,4 +1,4 @@
-from cProfile import label
+#from cProfile import label
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -16,26 +16,29 @@ def readfile(filename):
 
     return np.array(x), np.array(u)
 
+if __name__ == '__main__':
+    # load data
+    xexact, uexact = readfile("data.txt")
+    x1, v1 = readfile("approx10.txt")
+    x2, v2 = readfile("approx100.txt")
+    x3, v3 = readfile("approx1000.txt")
+    x4, v4 = readfile("approx10000.txt")
 
-def plot(x, u, v, save=False):
-    """Plot an array of x and u values."""
-    plt.plot(x, u, label="$u$")
-    plt.plot(x, v, label= "$v$")
+    # make plot for Problem 2
+    plt.figure()
+    plt.plot(xexact, uexact, label="Exact $u(x)$")
+    plt.xlabel(r'$x$')
+    plt.ylabel(r'$u(x)$')
+    plt.savefig('figs/problem2.pdf')
 
+    # make plot for Problem 7
+    plt.figure()
+    plt.plot(xexact, uexact, label="Exact $u(x)$")
+    plt.plot(x1, v1, label="$N=10$")
+    plt.plot(x2, v2, label="$N=10^2$")
+    plt.plot(x3, v3, label="$N=10^3$")
+    plt.plot(x4, v4, label="$N=10^4$")
     plt.xlabel(r'$x$')
     plt.ylabel(r'$u(x)$')
     plt.legend()
-    if save:
-        plt.savefig('problem_1.pdf')
-    plt.show()
-
-
-if __name__ == '__main__':
-    xexact, uexact = readfile("data.txt")
-    x, v = readfile("approx.txt")
-    
-    plt.plot(xexact, uexact, label="$u$")
-    plt.plot(x, v, label="$v$")
-    plt.legend()
-    plt.show()
-    #plot(x, u, v)
+    plt.savefig('figs/problem7.pdf')
