@@ -16,8 +16,8 @@ void write_file(std::string filename, std::vector< std::vector<double> > values)
     ofile.open(filename);
     
     // width and precision parameters used to format the output
-    int width = 12;
-    int precision = 4;
+    int width = 20;
+    int precision = 10;
     // Loop over steps
     int M = values[0].size();
     for(int j = 0; j < M; j++)
