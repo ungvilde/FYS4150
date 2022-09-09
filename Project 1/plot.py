@@ -31,7 +31,11 @@ def plot(x, u, v, save=False):
 
 
 if __name__ == '__main__':
-    _, u = readfile("data.txt")
+    xexact, uexact = readfile("data.txt")
     x, v = readfile("approx.txt")
     
-    plot(x, u[1:], v)
+    plt.plot(xexact, uexact, label="$u$")
+    plt.plot(x, v, label="$v$")
+    plt.legend()
+    plt.show()
+    #plot(x, u, v)

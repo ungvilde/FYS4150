@@ -27,7 +27,6 @@ std::vector< std::vector<double> > general_algorithm(
         g[i] = g[i] - alpha*g[i-1]; //2 FLOPs
         xvalues[i] = xvalues[i-1] + h;
     }
-
     v[N-1] = g[N-1]/b[N-1]; // 1 FLOPs
 
     for(int i=N-2; i>=0; i--)
