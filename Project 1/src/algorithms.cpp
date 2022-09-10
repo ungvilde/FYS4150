@@ -43,3 +43,46 @@ std::vector< std::vector<double> > general_algorithm(
 
     return approxvalues;
 }
+
+std::vector< std::vector<double>> special_algorithm(
+    std::vector<double> a, // lower diagonal, size N-1
+    std::vector<double> b, // main diagonal, size N
+    std::vector<double> c, // upper diagonal, size N-1
+    std::vector<double> g, // f(x)*h^2, size N
+    int N, // num steps
+    double h // stepsize
+)
+{
+    std::vector<double> v(N); // vector for approx uvalues
+    std::vector<double> xvalues(N); // xvalues ranging from h to N*h
+
+    double alpha;
+    xvalues[0] = h;
+    // pre-compute values for b
+    for(int i=1;i<N+1; i++)
+    {
+        b[i-1] = (i+1.)/i; 
+    }
+
+    // execute special algorithm
+    for(int i=1; i<N; i++)
+    {
+        // forward substitution
+        g[i] = g[i] + g[i-1]/b[i]; //2 FLOPs
+        xvalues[i] = xvalues[i-1] + h;
+    }
+
+    v[N-1] = g[N-1]/b[N-1]; // 1 FLOPs
+
+    for(int i=N-2; i>=0; i--)
+    {
+        // backward substitution
+        v[i] = (g[i] + v[i+1])/b[i]; //2 FLOPs
+    }
+
+    std::vector< std::vector<double> > approxvalues;
+    approxvalues.push_back(xvalues);
+    approxvalues.push_back(v);
+
+    return approxvalues;
+}

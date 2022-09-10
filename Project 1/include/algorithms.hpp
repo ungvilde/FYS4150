@@ -20,4 +20,14 @@ std::vector< std::vector<double> > general_algorithm(
     double h
     );
 
+// algorithm for solving special case of tridiagonal matrix eq. where a
+std::vector< std::vector<double>> special_algorithm(
+    std::vector<double> a, // lower diagonal, size N-1
+    std::vector<double> b, // main diagonal, size N
+    std::vector<double> c, // upper diagonal, size N-1
+    std::vector<double> g, // f(x)*h^2, size N
+    int N, // num steps
+    double h // stepsize
+);
+
 #endif  // end of include guard __utils_hpp__
