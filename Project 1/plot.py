@@ -18,15 +18,11 @@ def readfile(filename):
 
 if __name__ == '__main__':
     # load data
-    xexact, uexact = readfile("data.txt")
-    x1, v1 = readfile("approx10.txt")
-    x2, v2 = readfile("approx100.txt")
-    x3, v3 = readfile("approx1000.txt")
-    x4, v4 = readfile("approx10000.txt")
-
+    xexact, uexact = readfile("data/exact.txt")
+    
     # make plot for Problem 2
     plt.figure()
-    plt.plot(xexact, uexact, label="Exact $u(x)$")
+    plt.plot(xexact, uexact)
     plt.xlabel(r'$x$')
     plt.ylabel(r'$u(x)$')
     plt.savefig('figs/problem2.pdf')
@@ -34,27 +30,26 @@ if __name__ == '__main__':
     # make plot for Problem 7
     plt.figure()
     plt.plot(xexact, uexact, label="Exact $u(x)$")
-    plt.plot(x1, v1, label="$N=10$")
-    plt.plot(x2, v2, label="$N=10^2$")
-    plt.plot(x3, v3, label="$N=10^3$")
-    plt.plot(x4, v4, label="$N=10^4$")
+    for i in range(1,4):
+        N = 10**i
+        filename = f"data/general_approx_N{N}.txt"
+        x, v = readfile(filename)    
+        plt.plot(x, v, label=f"$N=10^{i}$")
     plt.xlabel(r'$x$')
     plt.ylabel(r'$u(x)$')
     plt.legend()
     plt.savefig('figs/problem7.pdf')
-    
-    x1, v1 = readfile("special10.txt")
-    x2, v2 = readfile("special100.txt")
-    x3, v3 = readfile("special1000.txt")
-    x4, v4 = readfile("special10000.txt")
+
+    # make plot for Problem 9
     plt.figure()
     plt.plot(xexact, uexact, label="Exact $u(x)$")
-    plt.plot(x1, v1, label="$N=10$")
-    plt.plot(x2, v2, label="$N=10^2$")
-    plt.plot(x3, v3, label="$N=10^3$")
-    plt.plot(x4, v4, label="$N=10^4$")
-    plt.title("Special algorithm")
+    for i in range(1,4):
+        N = 10**i
+        filename = f"data/special_approx_N{N}.txt"
+        x, v = readfile(filename)    
+        plt.plot(x, v, label=f"$N=10^{i}$")
     plt.xlabel(r'$x$')
     plt.ylabel(r'$u(x)$')
     plt.legend()
     plt.savefig('figs/problem9.pdf')
+    
