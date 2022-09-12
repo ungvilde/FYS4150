@@ -36,11 +36,11 @@ std::vector< std::vector<double> > general_algorithm(
     for(int i=1; i<N-1; i++)
     {
         // forward substitution
-        alpha = a[i]/b[i-1]; // 1 FLOP
-        b[i] = b[i] - alpha*c[i-1]; //2 FLOPs
-        g[i] = g[i] - alpha*g[i-1]; //2 FLOPs
-    }
+        b[i] = b[i] - a[i-1]/b[i-1]*c[i-1]; //2 FLOPs
+        g[i] = g[i] - a[i-1]/b[i-1]*g[i-1]; //2 FLOPs
 
+        
+    }
     v[N-1] = g[N-2]/b[N-2]; // 1 FLOPs
 
     for(int i=N-2; i>=1; i--)
