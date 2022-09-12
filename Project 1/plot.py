@@ -46,21 +46,21 @@ if __name__ == '__main__':
     plt.savefig('figs/problem7.pdf')
 
     # make plot for Problem 9
-    plt.figure()
-    plt.plot(xexact, uexact, label="Exact $u(x)$")
-    for i in range(1,4):
-        N = 10**i
-        filename = f"data/special_approx_N{N}.txt"
-        x, v = readfile(filename)    
-        plt.plot(x, v, label=f"$N=10^{i}$")
-    plt.xlabel(r'$x$')
-    plt.ylabel(r'$u(x)$')
-    plt.legend()
-    plt.savefig('figs/problem9.pdf')
+    # plt.figure()
+    # plt.plot(xexact, uexact, label="Exact $u(x)$")
+    # for i in range(1,4):
+    #     N = 10**i
+    #     filename = f"data/special_approx_N{N}.txt"
+    #     x, v = readfile(filename)    
+    #     plt.plot(x, v, label=f"$N=10^{i}$")
+    # plt.xlabel(r'$x$')
+    # plt.ylabel(r'$u(x)$')
+    # plt.legend()
+    # plt.savefig('figs/problem9.pdf')
     
     # now we make error plots
     plt.figure()
-    for i in range(1,8):
+    for i in range(1,6):
         N = 10**i
         filename = f"data/general_approx_N{N}.txt"
         x, v = readfile(filename)    
@@ -75,7 +75,7 @@ if __name__ == '__main__':
     plt.savefig("figs/problem8a.pdf")
 
     plt.figure()
-    for i in range(1,8):
+    for i in range(1,6):
         N = 10**i
         filename = f"data/general_approx_N{N}.txt"
         x, v = readfile(filename)    
@@ -87,13 +87,13 @@ if __name__ == '__main__':
     plt.xlabel(r'$x$')
     plt.ylabel(r'$\Delta$')
     plt.legend()
-    plt.savefig("figs/problem8a.pdf")
+    plt.savefig("figs/problem8b.pdf")
 
     plt.figure()
     eps_max = []
     for i in range(1,8):
         N = 10**i
-        filename = f"data/special_approx_N{N}.txt"
+        filename = f"data/general_approx_N{N}.txt"
         x, v = readfile(filename)   
         x = x[1:-1]
         v = v[1:-1]
@@ -104,5 +104,5 @@ if __name__ == '__main__':
     plt.ylabel(r"$\max(\epsilon)$")
     plt.savefig("figs/problem8c.pdf")
 
-    df = pd.DataFrame({'N' : [10**i for i in range(1,8)], r'max(epsilon)' : np.round(eps_max, 8)})
+    df = pd.DataFrame({'N' : [f"10{i}" for i in range(1,8)], r'max(epsilon)' : np.round(eps_max, 8)})
     print(df.to_latex(index=False)) 
