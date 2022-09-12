@@ -117,8 +117,8 @@ if __name__ == '__main__':
     
     df = pd.DataFrame({
       'N':   [f"10{i}" for i in logN],
-      'Time general': np.round(time_general, 7),
-      'Time special': np.round(time_special, 7)
+      'Time general': time_general,
+      'Time special': time_special
     })
 
     print(df.to_latex(index=False)) 
