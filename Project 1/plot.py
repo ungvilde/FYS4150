@@ -34,12 +34,12 @@ if __name__ == '__main__':
 
     # make plot for Problem 7
     plt.figure()
-    plt.plot(xexact, uexact, label="Exact $u(x)$")
     for i in range(1,4):
         N = 10**i
         filename = f"data/general_approx_N{N}.txt"
         x, v = readfile(filename)    
         plt.plot(x, v, label=f"$N=10^{i}$")
+    plt.plot(xexact, uexact, 'k--', label="Exact $u(x)$")
     plt.xlabel(r'$x$')
     plt.ylabel(r'$u(x)$')
     plt.legend()
@@ -105,4 +105,20 @@ if __name__ == '__main__':
     plt.savefig("figs/problem8c.pdf")
 
     df = pd.DataFrame({'N' : [f"10{i}" for i in range(1,8)], r'max(epsilon)' : np.round(eps_max, 8)})
+    print(df.to_latex(index=False)) 
+
+    # we make the timing table
+    logN, time_general, time_special = [], [], []
+    with open("data/timing.txt", 'r') as f:
+        for line in f:
+            logN.append(float(line.split()[0]))
+            time_general.append(float(line.split()[1]))
+            time_special.append(float(line.split()[2]))
+    
+    df = pd.DataFrame({
+      'N':   [f"10{i}" for i in logN],
+      'Time general': np.round(time_general, 7),
+      'Time special': np.round(time_special, 7)
+    })
+
     print(df.to_latex(index=False)) 

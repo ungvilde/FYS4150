@@ -4,9 +4,11 @@
 #include <cmath>
 #include <iomanip>
 #include <fstream>
+#include <chrono>
 
 #include "utils.hpp"
 #include "algorithms.hpp"
+
 
 int main()
 {
@@ -32,10 +34,10 @@ int main()
     datavalues.push_back(uvalues);
     write_file("data/exact.txt", datavalues);
 
-    //now we make approximations with varying number of steps along x-axis
-    // first using general algorithm
+    // now we make approximations with varying number of steps along x-axis
+    // using general algorithm
     int Nsteps = 10;
-    while(Nsteps <= 10000) //up to 10**7
+    while(Nsteps <= 10000000) //generated datasets for num steps up to 10**7
     {
     std::vector< std::vector<double> > approxvalues = general_algorithm(Nsteps);  
     std::string filename = "data/general_approx_N" +  std::to_string(Nsteps) + ".txt";
@@ -43,16 +45,19 @@ int main()
     Nsteps=Nsteps*10;
     }
     
-    //then using special (optimized) algorithm
-    Nsteps = 10;
-    while(Nsteps <= 10000) //up to 10**7
+    // here we time the algorithms for varying number of steps
+    Nsteps = 10; //initial num. steps
+    std::ofstream ofile; 
+    ofile.open("data/timing.txt");
+    while(Nsteps <= 1000000) //up to 10**6
     {
-    std::vector< std::vector<double> > approxvalues = special_algorithm(Nsteps);  
-    std::string filename = "data/special_approx_N" +  std::to_string(Nsteps) + ".txt";
-    write_file(filename, approxvalues);
+    double time_general = time_general_algorithm(Nsteps, 10);
+    double time_special = time_special_algorithm(Nsteps, 10);
+
+    ofile << log10(Nsteps) << " " << scientific_format(time_general, 10, 3) << " " << scientific_format(time_special, 10, 3) << std::endl;
     Nsteps=Nsteps*10;
     }
-
+    ofile.close();
     return 0;
 }
 

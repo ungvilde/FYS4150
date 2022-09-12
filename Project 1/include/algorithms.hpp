@@ -16,4 +16,10 @@ std::vector< std::vector<double> > general_algorithm(int N);
 // algorithm for solving special case of tridiagonal matrix eq. where a
 std::vector< std::vector<double>> special_algorithm(int N);
 
+// script for timing respective algorithms
+double time_general_algorithm(int N, int num_iter);
+
+double time_special_algorithm(int N, int num_iter);
+
+
 #endif  // end of include guard __utils_hpp__
