@@ -29,10 +29,10 @@ int main()
     }
 
     // save in file
-    std::vector< std::vector<double> > datavalues;
+    std::vector<std::vector<double>> datavalues;
     datavalues.push_back(xvalues);
     datavalues.push_back(uvalues);
-    write_file("data/exact.txt", datavalues);
+    write_file("exact.txt", datavalues);
 
     // now we make approximations with varying number of steps along x-axis
     // using general algorithm
@@ -40,15 +40,15 @@ int main()
     while(Nsteps <= 10000000) //generated datasets for num steps up to 10**7
     {
     std::vector< std::vector<double> > approxvalues = general_algorithm(Nsteps);  
-    std::string filename = "data/general_approx_N" +  std::to_string(Nsteps) + ".txt";
+    std::string filename = "general_approx_N" +  std::to_string(Nsteps) + ".txt";
     write_file(filename, approxvalues);
     Nsteps=Nsteps*10;
     }
     
     // here we time the algorithms for varying number of steps
     Nsteps = 10; //initial num. steps
-    std::ofstream ofile; 
-    ofile.open("data/timing.txt");
+    std::ofstream ofile;
+    ofile.open("timing.txt");
     while(Nsteps <= 1000000) //up to 10**6
     {
     double time_general = time_general_algorithm(Nsteps, 10);
