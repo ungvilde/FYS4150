@@ -1,6 +1,7 @@
 #from cProfile import label
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
 
 def readfile(filename):
     """
@@ -16,8 +17,12 @@ def readfile(filename):
 
     return np.array(x), np.array(u)
 
+def u_func(x): 
+    #excact solution
+    return 1 - (1 - np.exp(-10.))*x - np.exp(-10*x);
+
 if __name__ == '__main__':
-    # load data
+    # # load data
     xexact, uexact = readfile("data/exact.txt")
     
     # make plot for Problem 2
@@ -53,3 +58,51 @@ if __name__ == '__main__':
     plt.legend()
     plt.savefig('figs/problem9.pdf')
     
+    # now we make error plots
+    plt.figure()
+    for i in range(1,8):
+        N = 10**i
+        filename = f"data/general_approx_N{N}.txt"
+        x, v = readfile(filename)    
+        x = x[1:-1] # remove boundary values to avoid 0-0 terms
+        v = v[1:-1]
+        Delta = np.abs(v - u_func(x)) # absolute error
+        plt.plot(x, Delta, label=f"$N=N^{i}$")
+    plt.yscale('log')
+    plt.xlabel(r'$x$')
+    plt.ylabel(r'$\Delta$')
+    plt.legend()
+    plt.savefig("figs/problem8a.pdf")
+
+    plt.figure()
+    for i in range(1,8):
+        N = 10**i
+        filename = f"data/general_approx_N{N}.txt"
+        x, v = readfile(filename)    
+        x = x[1:-1] # remove boundary values to avoid 0/0 terms
+        v = v[1:-1]
+        epsilon = np.abs((v - u_func(x))/u_func(x)) # absolute error
+        plt.plot(x, epsilon, label=f"$N=N^{i}$")
+    plt.yscale('log')
+    plt.xlabel(r'$x$')
+    plt.ylabel(r'$\Delta$')
+    plt.legend()
+    plt.savefig("figs/problem8a.pdf")
+
+    plt.figure()
+    eps_max = []
+    for i in range(1,8):
+        N = 10**i
+        filename = f"data/special_approx_N{N}.txt"
+        x, v = readfile(filename)   
+        x = x[1:-1]
+        v = v[1:-1]
+        eps = np.abs((v - u_func(x))/u_func(x))
+        eps_max.append(np.max(eps))
+    plt.loglog([10**i for i in range(1,8)], eps_max, '-o')
+    plt.xlabel("Number of steps")
+    plt.ylabel(r"$\max(\epsilon)$")
+    plt.savefig("figs/problem8c.pdf")
+
+    df = pd.DataFrame({'N' : [10**i for i in range(1,8)], r'max(epsilon)' : np.round(eps_max, 8)})
+    print(df.to_latex(index=False)) 
