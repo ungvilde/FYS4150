@@ -7,6 +7,7 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
+#include <iomanip>
 #include <cmath>
 
 // Return a string with a double in scientific notation
