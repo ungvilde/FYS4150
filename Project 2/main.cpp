@@ -5,43 +5,42 @@
 
 int main()
 {
-  
+
   int N=6; // number of equations to solve
   double h = 0.01; //stepsize
-  double pi = 3.14159265358979323846; 
+  double d = 2./(h*h); // main diagonal
+  double a = -1./(h*h); // upper + lower diagonal
 
   // make tridiagonal matrix
-  arma::mat A = arma::mat(N, N).fill(0.);
-  A.diag() = arma::vec(N).fill(2./(h*h));
-  A.diag(-1) = arma::vec(N-1).fill(-1./(h*h));
-  A.diag(1) = arma::vec(N-1).fill(-1./(h*h));
+  arma::mat A = make_tridiag(N, a, d);
 
   // solve for v and lambda using armadillo
   arma::vec eigval;
   arma::mat eigvec;
-
   arma::eig_sym(eigval, eigvec, A);
-  eigval.print("Armadillo eigenvalues: ");
+  eigvec = arma::normalise(eigvec); // normalise for comparison with analytic solution
+  
+  // find analytic solution
+  arma::vec lambda(N); //eigenvalues
+  arma::mat V = arma::mat(N,N); //eigenvectors
+  solve_analytic(N, a, d, lambda, V);
 
-  arma::vec lambda(N);
-  arma::mat V = arma::mat(N,N);
+  // now we compare the solutions
+  arma::vec are_equal(N); 
+  bool eigvals_equal = arma::approx_equal(lambda, eigval, "absdiff", 1e-8);
 
-  for(int i = 1; i < N+1; i++)
+  for(int i=0; i<N; i++)
   {
-    lambda(i-1) = 2./(h*h) - 2/(h*h) * cos(i*pi / (N+1));
-
-    for(int j=1; j < N+1; j++)
-    {
-      V(j-1, i-1) = sin(j*i*pi/(N+1));
-    }
+    are_equal(i) = arma::approx_equal(eigvec.col(i), V.col(i), "absdiff", 1e-8) || arma::approx_equal(eigvec.col(i), -1*V.col(i), "absdiff", 1e-8);
   }
-  lambda.print("Analytical eigenvalues: ");
+  bool eigvecs_equal = arma::all(are_equal);
 
-  // normalise to compare
-  eigvec = arma::normalise(eigvec);
-  eigvec.print("Armadillo eigenvector: ");
-  V = arma::normalise(V);
-  V.print("Analytic eigenvectors:");
+  if(eigvals_equal && eigvecs_equal)
+  {
+    std::cout << "The eigenvalues and eigenvalues are equal." << std::endl;
+  } else{
+    std::cout << "The eigenvalues and aigenvalues are NOT equal." << std::endl;
+  }
  
   return 0;
 }
