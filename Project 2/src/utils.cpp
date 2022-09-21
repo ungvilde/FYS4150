@@ -49,3 +49,24 @@ void solve_analytic(int N, double a, double d, arma::vec& eigvals, arma::mat& ei
   // normalise eigenvectors 
   eigvecs = arma::normalise(eigvecs);
 }
+
+double max_offdiag_symmetric(const arma::mat& A, int& k, int &l)
+{
+  int N = A.n_rows;
+  double max_elem = A(N-1, N-2);
+
+  for(int i=0; i < N-1; i++)
+  {
+    for(int j=i+1; j < N; j++)
+    {
+      double elem = abs(A(i,j));
+      
+      if (elem > max_elem)
+      {
+        k=i;
+        l=j;
+      }
+    }
+  }
+  return A(k, l);
+}

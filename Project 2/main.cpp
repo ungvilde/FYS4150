@@ -26,11 +26,12 @@ int main()
   solve_analytic(N, a, d, lambda, V);
 
   // now we compare the solutions
-  arma::vec are_equal(N); 
+  arma::vec are_equal(N); // vector containing boolean value when comparing eigenvectors
   bool eigvals_equal = arma::approx_equal(lambda, eigval, "absdiff", 1e-8);
 
   for(int i=0; i<N; i++)
   {
+    // check if eigenvectors are the same (also checks vector when scaled by -1)
     are_equal(i) = arma::approx_equal(eigvec.col(i), V.col(i), "absdiff", 1e-8) || arma::approx_equal(eigvec.col(i), -1*V.col(i), "absdiff", 1e-8);
   }
   bool eigvecs_equal = arma::all(are_equal);
@@ -39,8 +40,20 @@ int main()
   {
     std::cout << "The eigenvalues and eigenvalues are equal." << std::endl;
   } else{
-    std::cout << "The eigenvalues and aigenvalues are NOT equal." << std::endl;
+    std::cout << "The eigenvalues and eigenvalues are NOT equal." << std::endl;
   }
  
+  arma::mat A_test = arma::mat(4,4).fill(0.);
+  A_test.diag() = arma::vec(4).fill(1.);
+  A_test(3,0) = 0.5;
+  A_test(2,1) = -0.7;
+  A_test += A_test.t();
+  A_test.print("A_test:"); 
+  int l = 0;
+  int k = 0;
+  double max_elem = max_offdiag_symmetric(A_test, k, l);
+  std::cout << "Max off-diagonal element: " << max_elem << std::endl;
+  std::cout << "Indeces: " << k << ", " << l << std::endl;
+
   return 0;
 }
