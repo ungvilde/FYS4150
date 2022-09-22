@@ -21,7 +21,6 @@ double max_offdiag_symmetric(const arma::mat& A, int& k, int &l)
       }
     }
   }
-  std::cout << abs(A(k, l)) << "l="<<l <<" k="<< k << std::endl;
   return max_elem;
 }
 
@@ -101,7 +100,6 @@ void jacobi_eigensolver(arma::mat& A, double eps, arma::vec& eigenvalues, arma::
     {
         // do the rotation
         jacobi_rotate(A, R, k, l);
-        A.print("Current A");
         //then find the largest off-diag. element of updated A matrix
         max_elem = max_offdiag_symmetric(A, k, l);
         
