@@ -115,6 +115,10 @@ void jacobi_eigensolver(arma::mat& A, double eps, arma::vec& eigenvalues, arma::
         
     }
 
+    // sort and normalise results
     eigenvalues = A.diag();
+    arma::uvec inds = arma::sort_index(eigenvalues);
+    eigenvalues = eigenvalues(inds);
     eigenvectors = arma::normalise(R);
+    eigenvectors = eigenvectors.cols(inds);
 }
