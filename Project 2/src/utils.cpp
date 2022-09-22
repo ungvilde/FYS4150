@@ -19,7 +19,6 @@ std::string scientific_format(const double d, const int width, const int prec)
   return ss.str();
 }
 
-
 // Return a string with an armadillo vector in scientific notation
 std::string scientific_format(const arma::vec& v, const int width, const int prec)
 {
@@ -51,3 +50,23 @@ void solve_analytic(int N, double a, double d, arma::vec& eigvals, arma::mat& ei
   eigvecs = arma::normalise(eigvecs);
 }
 
+void compare_solutions(arma::mat eigvecs_analytic, arma::vec eigvals_analytic, arma::mat eigvecs, arma::vec eigvals, double eps)
+{
+  int N = eigvecs.n_rows;
+  arma::vec are_equal(N); // vector containing boolean value when comparing eigenvectors
+
+  bool eigvals_equal = arma::approx_equal(eigvals_analytic, eigvals, "absdiff", eps);
+  for(int i=0; i<N; i++)
+  {
+    // check if eigenvectors are the same (also checks vector when scaled by -1)
+    are_equal(i) = arma::approx_equal(eigvecs.col(i), eigvecs_analytic.col(i), "absdiff", eps) || arma::approx_equal(eigvecs_analytic.col(i), -1*eigvecs.col(i), "absdiff", eps);
+  }
+  bool eigvecs_equal = arma::all(are_equal);
+
+  if(eigvals_equal && eigvecs_equal)
+  {
+    std::cout << "The eigenvalues and eigenvectors are equal." << std::endl;
+  } else{
+    std::cout << "The eigenvalues and eigenvectors are NOT equal." << std::endl;
+  }
+}

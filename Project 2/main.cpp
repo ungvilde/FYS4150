@@ -5,76 +5,63 @@
 
 int main()
 {
-  // Problem 2: Compare armadillo and analyitcal solution
-
-  int N=6; // number of equations to solve
+  // Problem 2: 
+  // Compare armadillo and analyitcal solution
+  int N = 6; // number of equations to solve
   double h = 0.01; //stepsize
-  double d = 2./(h*h); // main diagonal
-  double a = -1./(h*h); // upper + lower diagonal
+  double d = 2. / (h*h); // main diagonal
+  double a = -1. / (h*h); // upper + lower diagonal
 
   // make tridiagonal matrix
   arma::mat A = make_tridiag(N, a, d);
 
-  // solve for v and lambda using armadillo
-  arma::vec eigval;
-  arma::mat eigvec;
-  arma::eig_sym(eigval, eigvec, A);
-  eigvec = arma::normalise(eigvec); // normalise for comparison with analytic solution
+  // solve eigenvalue problem using armadillo
+  arma::vec eigvals_arma;
+  arma::mat eigvecs_arma;
+  arma::eig_sym(eigvals_arma, eigvecs_arma, A);
+  eigvecs_arma = arma::normalise(eigvecs_arma); // normalise for comparison with analytic solution
   
   // find analytic solution
-  arma::vec lambda(N); //eigenvalues
-  arma::mat V = arma::mat(N,N); //eigenvectors
-  solve_analytic(N, a, d, lambda, V);
-  lambda.print("Analytic eigenvalues:");
-  V.print("analytic eigenvectors:");
+  arma::vec eigvals_analytic(N); //eigenvalues
+  arma::mat eigvecs_analytic = arma::mat(N,N); //eigenvectors
+  solve_analytic(N, a, d, eigvals_analytic, eigvecs_analytic);
 
   // now we compare the solutions
-  arma::vec are_equal(N); // vector containing boolean value when comparing eigenvectors
-  bool eigvals_equal = arma::approx_equal(lambda, eigval, "absdiff", 1e-8);
+  double eps = 1e-10;
+  std::cout << "Solution to problem 2:" << std::endl;
+  compare_solutions(eigvecs_analytic, eigvals_analytic, eigvecs_arma, eigvals_arma, eps);
 
-  for(int i=0; i<N; i++)
-  {
-    // check if eigenvectors are the same (also checks vector when scaled by -1)
-    are_equal(i) = arma::approx_equal(eigvec.col(i), V.col(i), "absdiff", 1e-8) || arma::approx_equal(eigvec.col(i), -1*V.col(i), "absdiff", 1e-8);
-  }
-  bool eigvecs_equal = arma::all(are_equal);
+  // Problem 3: 
+  // test max_offdiag_symmetric 
 
-  if(eigvals_equal && eigvecs_equal)
-  {
-    std::cout << "The eigenvalues and eigenvalues are equal." << std::endl;
-  } else{
-    std::cout << "The eigenvalues and eigenvalues are NOT equal." << std::endl;
-  }
-
-  // Problem 3: test max_offdiag_symmetric-function for plroblem 3
+  std::cout << "Solution to problem 3:" << std::endl;
   arma::mat A_test = arma::mat(4,4).fill(0.);
   A_test.diag() = arma::vec(4).fill(1.);
   A_test(3,0) = 0.5;
   A_test(2,1) = -0.7;
   A_test += A_test.t();
   A_test.print("A_test:"); 
-  int l = 0;
-  int k = 0;
+  
+  int l;
+  int k;
   double max_elem = max_offdiag_symmetric(A_test, k, l);
-  std::cout << "Max. off-diagonal element: " << max_elem << std::endl;
-  std::cout << "Indeces: " << k << ", " << l << std::endl;
+  std::cout << "Max. absolute off-diagonal element: " << max_elem << std::endl;
+  std::cout << "With indices: k=" << k << " and l=" << l << std::endl;
 
-
-  // Problem 4: test jacobi rotation algorithm
+  // Problem 4: 
+  // test jacobi rotation algorithm
   arma::vec eigenvalues;
   arma::mat eigenvectors;
   int iterations;
-  bool converged;
-
-  double eps = 1e-10;
   int maxiter = 100;
   bool converged = false;
 
   A = make_tridiag(6, a, d);
   jacobi_eigensolver(A, eps, eigenvalues, eigenvectors, maxiter, iterations, converged);
-  std::cout << "Converged: " << converged << " after iterations=" << iterations << std::endl;
   eigenvalues.print("Jacobi rotation eigenvalues: ");
   eigenvectors.print("Jacobi rotation eigenvectors: ");
+
+  compare_solutions(eigvecs_analytic, eigvals_analytic, eigenvectors, eigenvalues, eps);
 
   return 0;
 }

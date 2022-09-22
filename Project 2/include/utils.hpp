@@ -19,4 +19,7 @@ std::string scientific_format(const arma::vec& v, const int width=20, const int 
 //find analytic solution to tridiagonal matrix A = tridiag(a,d,a) where A in NxN
 void solve_analytic(int N, double a, double d, arma::vec& eigvals, arma::mat& eigvecs);
 
+//function for comparing eigenvecs+eigenvals with analytic solution
+void compare_solutions(arma::mat eigvecs_analytic, arma::vec eigvals_analytic, arma::mat eigvecs, arma::vec eigvals, double eps);
+
 #endif 

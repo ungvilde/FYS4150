@@ -1,9 +1,13 @@
 # Project 2 - Scaling equations, eigenvalue problems, code testing
 ## One-dimensional buckling beam
 
-To build
+To build (Vilde)
 > CPATH=/opt/homebrew/include LIBRARY_PATH=/opt/homebrew/lib g++ main.cpp -std=c++11 -larmadillo src/*.cpp -I include -o main.exe
 
 To run
 > ./main.exe
 
+## To include...
+- Project Description
+- Repo overview
+- How to run (make user able to provide command line args to produce own results?)
