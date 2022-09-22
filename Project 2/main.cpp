@@ -61,44 +61,20 @@ int main()
 
 
   // Problem 4: test jacobi rotation algorithm
-  // arma::vec eigenvalues;
-  // arma::mat eigenvectors;
+  arma::vec eigenvalues;
+  arma::mat eigenvectors;
   int iterations;
   bool converged;
 
+  double eps = 1e-10;
+  int maxiter = 100;
+  bool converged = false;
+
   A = make_tridiag(6, a, d);
-  A.print("Original A:");
-  //jacobi_eigensolver(A, 1e-4, eigenvalues, eigenvectors, 100, iterations, converged);
-  int maxiter = 10000000;
-  double eps = 1e-8;
-
-  k = 0;
-  l = 1;
-  arma::mat R = arma::mat(N, N, arma::fill::eye);
-
-  max_elem = max_offdiag_symmetric(A, k, l);
-
-  //while(max_elem > eps)
-  for(int i=0; i<=maxiter; i++)
-  {
-      if(max_elem < eps) // if convergence was reached before hitting maxiter
-      {
-          converged = true;
-          iterations = i;
-      }
-
-      jacobi_rotate(A, R, k, l);
-      //std::cout <<"k=" << k << ", l ="<< l << std::endl;
-      max_elem = max_offdiag_symmetric(A, k, l);
-      
-      if(i==maxiter)
-      {
-          iterations = maxiter;
-      }
-  }
-  std::cout << max_elem << std::endl;
-  A.diag().print("Eigenvalues A");
-  arma::normalise(R).print("Eigenvectors R");
+  jacobi_eigensolver(A, eps, eigenvalues, eigenvectors, maxiter, iterations, converged);
+  std::cout << "Converged: " << converged << " after iterations=" << iterations << std::endl;
+  eigenvalues.print("Jacobi rotation eigenvalues: ");
+  eigenvectors.print("Jacobi rotation eigenvectors: ");
 
   return 0;
 }

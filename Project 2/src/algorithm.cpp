@@ -1,7 +1,3 @@
-//
-// Definitions for the algorithms declared in clever_algorithms.hpp
-//
-
 #include "algorithm.hpp"
 
 
@@ -11,24 +7,22 @@
 double max_offdiag_symmetric(const arma::mat& A, int& k, int &l)
 {
   int N = A.n_rows;
-  k = N-1;
-  l = N-2;
-  double max_elem = A(k, l);
+  double max_elem = 0.;
 
-  for(int i=0; i < N-1; i++)
+  for(int i=0; i < N; i++)
   {
     for(int j=i+1; j < N; j++)
     {
-      double elem = abs(A(i,j));
-      
-      if (elem > max_elem)
+      if (abs(A(i,j)) > max_elem)
       {
+        max_elem = abs(A(i,j));
         k=i;
         l=j;
       }
     }
   }
-  return A(k, l);
+  std::cout << abs(A(k, l)) << "l="<<l <<" k="<< k << std::endl;
+  return max_elem;
 }
 
 // Performs a single Jacobi rotation, to "rotate away" the off-diagonal element at A(k,l).
@@ -41,25 +35,21 @@ void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l)
 
   // compute tau
   double tau = (A(l,l) - A(k, k))/(2*A(k, l));
-  //std::cout << "Tau = " << tau << std::endl; //hmmmm
   
   // compute tan=t, cos=c, sine=s
   if(tau > 0.)
   {
-    t = 1 / (tau + sqrt(1+tau*tau));
+    t = 1 / (tau + sqrt(1 + tau*tau));
+  } else{
+    t = -1 / (-tau + sqrt(1 + tau*tau));
   }
-  else{
-    t = -1 / (-tau + sqrt(1+tau*tau));
-  }
-
-  double c = 1/sqrt(1+t*t);
+  double c = 1 / sqrt(1 + t*t);
   double s = c*t;
 
   // transform current A matrix
   double A_kk = A(k, k);
   double A_ll = A(l, l); 
   A(k, k) = A_kk*c*c -2*A(k,l)*c*s + A_ll*s*s;
-  //std::cout << "A_kk = " << A(k,k) << std::endl;
   A(l, l) = A_ll*c*c + 2*A(k,l)*c*s + A_kk*s*s;
   A(k, l) = 0.;
   A(l, k) = 0.;
@@ -69,7 +59,7 @@ void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l)
   {
     if(i != k && i != l)
     {
-      // store new values as intermediary variable
+      // first compute updated values
       double A_ik_updated = A(i, k)*c - A(i, l)*s;
       double A_il_updated = A(i, l)*c + A(i, k)*s;
 
@@ -92,18 +82,12 @@ void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l)
     R(i, k) = R_ik_updated;
     R(i,l) = R_il_updated;
   }
-
   // Rotation finished
 }
 
 // Jacobi method eigensolver:
-// - Runs jacobo_rotate until max off-diagonal element < eps
-// - Writes the eigenvalues as entries in the vector "eigenvalues"
-// - Writes the eigenvectors as columns in the matrix "eigenvectors"
+// - Runs jacobi_rotate until max. off-diagonal element < eps
 //   (The returned eigenvalues and eigenvectors are sorted using arma::sort_index)
-// - Stops if it the number of iterations reaches "maxiter"
-// - Writes the number of iterations to the integer "iterations"
-// - Sets the bool reference "converged" to true if convergence was reached before hitting maxiter
 void jacobi_eigensolver(arma::mat& A, double eps, arma::vec& eigenvalues, arma::mat& eigenvectors, const int maxiter, int& iterations, bool& converged)
 {
     int N = A.n_rows;
@@ -113,24 +97,26 @@ void jacobi_eigensolver(arma::mat& A, double eps, arma::vec& eigenvalues, arma::
 
     double max_elem = max_offdiag_symmetric(A, k, l);
 
-    //while(max_elem > eps)
-    for(int i=0; i<=maxiter; i++)
+    while(max_elem > eps)
     {
-        if(max_elem < eps) // if convergence was reached before hitting maxiter
-        {
-            converged = true;
-            iterations = i;
-        }
-
+        // do the rotation
         jacobi_rotate(A, R, k, l);
+        A.print("Current A");
+        //then find the largest off-diag. element of updated A matrix
         max_elem = max_offdiag_symmetric(A, k, l);
         
-        if(i==maxiter)
-        {
-            iterations = maxiter;
+        iterations += 1;
+
+        if(max_elem < eps){ 
+            converged = true;
         }
+
+        if(iterations==maxiter){
+            break;
+        }
+        
     }
 
-    A.print("Eigenvalues");
-    R.print("Eigenvectors");
+    eigenvalues = A.diag();
+    eigenvectors = arma::normalise(R);
 }
