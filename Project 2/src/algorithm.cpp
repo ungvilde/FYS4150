@@ -44,7 +44,7 @@ void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l)
   //std::cout << "Tau = " << tau << std::endl; //hmmmm
   
   // compute tan=t, cos=c, sine=s
-  if(tau >= 0.)
+  if(tau > 0.)
   {
     t = 1 / (tau + sqrt(1+tau*tau));
   }
@@ -56,9 +56,11 @@ void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l)
   double s = c*t;
 
   // transform current A matrix
-  A(k, k) = A(k, k)*c*c -2*A(k,l)*c*s + A(l,l)*s*s;
+  double A_kk = A(k, k);
+  double A_ll = A(l, l); 
+  A(k, k) = A_kk*c*c -2*A(k,l)*c*s + A_ll*s*s;
   //std::cout << "A_kk = " << A(k,k) << std::endl;
-  A(l, l) = A(l,l)*c*c + 2*A(k,l)*c*s + A(k,k)*s*s;
+  A(l, l) = A_ll*c*c + 2*A(k,l)*c*s + A_kk*s*s;
   A(k, l) = 0.;
   A(l, k) = 0.;
 
