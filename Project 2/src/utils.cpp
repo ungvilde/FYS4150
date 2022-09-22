@@ -31,6 +31,7 @@ std::string scientific_format(const arma::vec& v, const int width, const int pre
   return ss.str();
 }
 
+//find analytic eigenvalue/vector solution to tridiagonal matrix A = tridiag(a,d,a) where A in NxN
 void solve_analytic(int N, double a, double d, arma::vec& eigvals, arma::mat& eigvecs)
 { 
   double pi = 3.14159265358979323846; 
@@ -50,23 +51,3 @@ void solve_analytic(int N, double a, double d, arma::vec& eigvals, arma::mat& ei
   eigvecs = arma::normalise(eigvecs);
 }
 
-double max_offdiag_symmetric(const arma::mat& A, int& k, int &l)
-{
-  int N = A.n_rows;
-  double max_elem = A(N-1, N-2);
-
-  for(int i=0; i < N-1; i++)
-  {
-    for(int j=i+1; j < N; j++)
-    {
-      double elem = abs(A(i,j));
-      
-      if (elem > max_elem)
-      {
-        k=i;
-        l=j;
-      }
-    }
-  }
-  return A(k, l);
-}

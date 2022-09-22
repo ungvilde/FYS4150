@@ -19,7 +19,4 @@ std::string scientific_format(const arma::vec& v, const int width=20, const int 
 //find analytic solution to tridiagonal matrix A = tridiag(a,d,a) where A in NxN
 void solve_analytic(int N, double a, double d, arma::vec& eigvals, arma::mat& eigvecs);
 
-// find greatest off-diagonal element in A, assuming A is symmetric
-double max_offdiag_symmetric(const arma::mat& A, int& k, int &l);
-
 #endif 
