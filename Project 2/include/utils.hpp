@@ -16,6 +16,9 @@ std::string scientific_format(double d, const int width=20, const int prec=10);
 // Return a string with an armadillo vector in scientific notation
 std::string scientific_format(const arma::vec& v, const int width=20, const int prec=10);
 
+// write to file
+void write_file(std::string filename, std::vector< std::vector<double> > values);
+
 //find analytic solution to tridiagonal matrix A = tridiag(a,d,a) where A in NxN
 void solve_analytic(int N, double a, double d, arma::vec& eigvals, arma::mat& eigvecs);
 

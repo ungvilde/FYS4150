@@ -58,10 +58,39 @@ int main()
 
   A = make_tridiag(6, a, d);
   jacobi_eigensolver(A, eps, eigenvalues, eigenvectors, maxiter, iterations, converged);
+  std::cout << "Converged after " << iterations << " iterations." << std::endl;
+
   eigenvalues.print("Jacobi rotation eigenvalues: ");
   eigenvectors.print("Jacobi rotation eigenvectors: ");
 
+  std::cout << "Comparing results with analytical solution:" << std::endl;
   compare_solutions(eigvecs_analytic, eigvals_analytic, eigenvectors, eigenvalues, eps);
 
+  // Problem 5:
+  // checking how num iterations of algorithm scales with matrix size
+  int M = 8; // num. matrices of varying N to compute
+  arma::mat data_values = arma::mat(M, 3);
+  N = 4;
+  // loop through different possibilities for N
+  for(int i=0; i < M; i++){
+    std::cout << "N = " << N << std::endl; 
+    A = make_tridiag(N, a, d);
+    maxiter = 2000000;
+    iterations = 0;
+    converged = false;
+    arma::vec eigenvalues_N;
+    arma::mat eigenvectors_N;
+    jacobi_eigensolver(A, eps, eigenvalues_N, eigenvectors_N, maxiter, iterations, converged);
+    data_values(i, 0) = N;
+    data_values(i, 1) = iterations;
+    data_values(i, 2) = converged;
+    std::cout << "For N = " << N << std::endl;
+    std::cout << "Num. iterations: " << iterations << " Converged? " << converged << " (Yes=1/No=0)" << std::endl;
+    N = 2*N; // update num. equations to solve
+  }
+
+  // find num iterations (and if it converged) as function of N
+  data_values.save("data/problem5.txt", arma::raw_ascii);
+  // make plot in python
   return 0;
 }
