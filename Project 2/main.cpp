@@ -6,7 +6,7 @@
 int main()
 {
   // Problem 2: 
-  // Compare armadillo and analyitcal solution
+  // Compare armadillo and analytical solution
   int N = 6; // number of equations to solve
   double h = 0.01; //stepsize
   double d = 2. / (h*h); // main diagonal
@@ -33,14 +33,13 @@ int main()
 
   // Problem 3: 
   // test max_offdiag_symmetric 
-
   std::cout << "Solution to problem 3:" << std::endl;
   arma::mat A_test = arma::mat(4,4).fill(0.);
   A_test.diag() = arma::vec(4).fill(1.);
   A_test(3,0) = 0.5;
   A_test(2,1) = -0.7;
   A_test += A_test.t();
-  A_test.print("A_test:"); 
+  A_test.print("Matrix for testing:"); 
   
   int l;
   int k;
@@ -50,68 +49,90 @@ int main()
 
   // Problem 4: 
   // test jacobi rotation algorithm
-  arma::vec eigenvalues;
-  arma::mat eigenvectors;
-  int iterations;
+  arma::vec eigenvals_numerical;
+  arma::mat eigenvecs_numerical;
+  int iterations = 0;
   int maxiter = 100;
   bool converged = false;
 
   A = make_tridiag(6, a, d);
-  jacobi_eigensolver(A, eps, eigenvalues, eigenvectors, maxiter, iterations, converged);
+  jacobi_eigensolver(A, eps, eigenvals_numerical, eigenvecs_numerical, maxiter, iterations, converged);
   std::cout << "Converged after " << iterations << " iterations." << std::endl;
 
-  eigenvalues.print("Jacobi rotation eigenvalues: ");
-  eigenvectors.print("Jacobi rotation eigenvectors: ");
+  eigenvals_numerical.print("Jacobi rotation eigenvalues: ");
+  eigenvecs_numerical.print("Jacobi rotation eigenvectors: ");
 
   std::cout << "Comparing results with analytical solution:" << std::endl;
-  compare_solutions(eigvecs_analytic, eigvals_analytic, eigenvectors, eigenvalues, eps);
+  compare_solutions(eigvecs_analytic, eigvals_analytic, eigenvecs_numerical, eigenvals_numerical, eps);
 
   // Problem 5:
-  // checking how num iterations of algorithm scales with matrix size
-  // int M = 8; // num. matrices of varying N to compute
-  // arma::mat data_values = arma::mat(M, 3);
-  // N = 4;
-  // // loop through different possibilities for N
-  // for(int i=0; i < M; i++){
-  //   std::cout << "N = " << N << std::endl; 
-  //   A = make_tridiag(N, a, d);
-  //   maxiter = 1000000;
-  //   iterations = 0;
-  //   converged = false;
-  //   arma::vec eigenvalues_N;
-  //   arma::mat eigenvectors_N;
-  //   jacobi_eigensolver(A, eps, eigenvalues_N, eigenvectors_N, maxiter, iterations, converged);
-  //   data_values(i, 0) = N;
-  //   data_values(i, 1) = iterations;
-  //   data_values(i, 2) = converged;
-  //   std::cout << "For N = " << N << std::endl;
-  //   std::cout << "Num. iterations: " << iterations << " Converged? " << converged << " (Yes=1/No=0)" << std::endl;
-  //   N = 2*N; // update num. equations to solve
-  // }
+  // checking how num. iterations of algorithm scales with matrix size
+  int M = 7; // num. solutions of varying N to compute
+  arma::mat data_values = arma::mat(M, 3);
+  N = 4; // start with 2^2 (up to 2^8)
+  maxiter = 1000000;
 
-  // // find num iterations (and if it converged) as function of N
-  // data_values.save("data/problem5.txt", arma::raw_ascii);
+  // loop through different possibilities for N
+  for(int i=0; i < M; i++){
+    std::cout << "N = " << N << std::endl; 
+    A = make_tridiag(N, a, d);
+    iterations = 0;
+    converged = false;
+    arma::vec eigenvalues_N;
+    arma::mat eigenvectors_N;
+
+    jacobi_eigensolver(A, eps, eigenvalues_N, eigenvectors_N, maxiter, iterations, converged);
+    data_values(i, 0) = N;
+    data_values(i, 1) = iterations;
+    data_values(i, 2) = converged;
+
+    std::cout << "For N = " << N << std::endl;
+    std::cout << "Num. iterations: " << iterations << " Converged? " << converged << " (Yes=1/No=0)" << std::endl;
+    N = 2*N; // update num. equations to solve
+  }
+
+  data_values.save("data/problem5.txt", arma::raw_ascii);
   // from here, make plot in python with plot.py
 
   // problem 6
-  // find results for N=10
+  // find and plot results for N=10
   N = 10;
   A = make_tridiag(N, a, d);
+  maxiter = 50000;
+  arma::vec eigenvalues_N10;
+  arma::mat eigenvectors_N10;
 
-  jacobi_eigensolver(A, eps, eigenvalues, eigenvectors, maxiter, iterations, converged);
+  jacobi_eigensolver(A, eps, eigenvalues_N10, eigenvectors_N10, maxiter, iterations, converged);
   std::cout << "Converged after " << iterations << " iterations." << std::endl;
 
-  eigenvalues.print("Jacobi rotation eigenvalues: ");
-  eigenvectors.print("Jacobi rotation eigenvectors: ");  
   arma::uvec inds = { 0, 1, 2 }; // get the three eigenvectors corresponding to the three lowest eigenvalues
-  eigenvectors.cols(inds).print("Solutions"); //save("data/problem6.txt", arma::raw_ascii)
-  arma::mat V = eigenvectors.cols(inds);
-  V.save("data/problem6_numerical.txt", arma::raw_ascii);
+  eigenvectors_N10.cols(inds).print("Solutions"); 
+  arma::mat V = eigenvectors_N10.cols(inds);
+  V.save("data/problem6_numerical_N10.txt", arma::raw_ascii);
 
-  arma::vec eigvals_analytic6(N); //eigenvalues
-  arma::mat eigvecs_analytic6 = arma::mat(N,N); //eigenvectors
-  solve_analytic(N, a, d, eigvals_analytic6, eigvecs_analytic6);
-  arma::mat V_analytic = eigvecs_analytic6.cols(inds);
-  V_analytic.save("data/problem6_analytic.txt", arma::raw_ascii);
+  arma::vec eigvals_analytic_N10(N); //eigenvalues
+  arma::mat eigvecs_analytic_N10 = arma::mat(N,N); //eigenvectors
+  solve_analytic(N, a, d, eigvals_analytic_N10, eigvecs_analytic_N10);
+  arma::mat V_analytic_N10 = eigvecs_analytic_N10.cols(inds);
+  V_analytic_N10.save("data/problem6_analytic_N10.txt", arma::raw_ascii);
+
+  // repeat for N=100
+  N = 100;
+  maxiter = 50000;
+  A = make_tridiag(N, a, d);
+  arma::vec eigenvalues_N100;
+  arma::mat eigenvectors_N100;
+
+  jacobi_eigensolver(A, eps, eigenvalues_N100, eigenvectors_N100, maxiter, iterations, converged);
+  std::cout << "Converged after " << iterations << " iterations." << std::endl;
+  V = eigenvectors_N100.cols(inds);
+  V.save("data/problem6_numerical_N100.txt", arma::raw_ascii);
+
+  arma::vec eigvals_analytic_N100(N); //eigenvalues
+  arma::mat eigvecs_analytic_N100 = arma::mat(N,N); //eigenvectors
+  solve_analytic(N, a, d, eigvals_analytic_N100, eigvecs_analytic_N100);
+  V_analytic_N10 = eigvecs_analytic_N100.cols(inds);
+  V_analytic_N10.save("data/problem6_analytic_N100.txt", arma::raw_ascii);
+
   return 0;
 }
