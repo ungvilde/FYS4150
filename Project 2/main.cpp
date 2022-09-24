@@ -91,29 +91,31 @@ int main()
     N = 2*N; // update num. equations to solve
   }
 
-  std::cout << "Testing for a dense matrix" << std::endl;
-  N = 4; // start with 2^2 (up to 2^8)
+  // Checking the amount of iterations needed for a randomly generated dense matrix
 
-  for(int i=0; i < M; i++){
-    // Generate random N*N matrix
-    arma::mat A = arma::mat(N, N).randn();
-    // Symmetrize the matrix by reflecting the upper triangle to lower triangle
-    A = arma::symmatu(A);
-    // A.print("Random matrix:");
-    iterations = 0;
-    converged = false;
-    arma::vec eigenvalues_N;
-    arma::mat eigenvectors_N;
+  // std::cout << "Testing for a dense matrix:" << std::endl;
+  // N = 4; // start with 2^2 (up to 2^8)
 
-    jacobi_eigensolver(A, eps, eigenvalues_N, eigenvectors_N, maxiter, iterations, converged);
-    data_values(i, 0) = N;
-    data_values(i, 1) = iterations;
-    data_values(i, 2) = converged;
+  // for(int i=0; i < M; i++){
+  //   // Generate random N*N matrix
+  //   arma::mat A = arma::mat(N, N).randn();
+  //   // Symmetrize the matrix by reflecting the upper triangle to lower triangle
+  //   A = arma::symmatu(A);
+  //   // A.print("Random matrix:");
+  //   iterations = 0;
+  //   converged = false;
+  //   arma::vec eigenvalues_N;
+  //   arma::mat eigenvectors_N;
 
-    std::cout << "For N = " << N << std::endl;
-    std::cout << "Num. iterations: " << iterations << " Converged? " << converged << " (Yes=1/No=0)" << std::endl;
-    N = 2*N; // update num. equations to solve
-  } 
+  //   jacobi_eigensolver(A, eps, eigenvalues_N, eigenvectors_N, maxiter, iterations, converged);
+  //   data_values(i, 0) = N;
+  //   data_values(i, 1) = iterations;
+  //   data_values(i, 2) = converged;
+
+  //   std::cout << "For N = " << N << std::endl;
+  //   std::cout << "Num. iterations: " << iterations << " Converged? " << converged << " (Yes=1/No=0)" << std::endl;
+  //   N = 2*N; // update num. equations to solve
+  // } 
 
   data_values.save("data/problem5.txt", arma::raw_ascii);
   // from here, make plot in python with plot.py
