@@ -76,7 +76,7 @@ ax[2].plot(xhat, v3, '--', label = "$v_i$")
 ax[2].hlines(y=0,xmin=0,xmax=1, linestyles='dotted', colors="black", linewidths=1)
 
 for i in range(3):
-    ax[i].set_title(f"$\lambda_{i+1}$ = {np.round(eigenvals[i])}")
+    ax[i].set_title(f"$\lambda_{i+1}$ = {np.round(eigenvals[i], 1)}")
 
 ax[1].set_xlabel("$\hat x$")
 ax[0].set_ylabel("$u$, $v$")
@@ -114,7 +114,7 @@ ax[2].plot(xhat, v3, '--', label = "$v_i$")
 ax[2].hlines(y=0,xmin=0,xmax=1, linestyles='dotted', colors="black", linewidths=1)
 
 for i in range(3):
-    ax[i].set_title(f"$\lambda_{i+1}$ = {np.round(eigenvals[i])}")
+    ax[i].set_title(f"$\lambda_{i+1}$ = {np.round(eigenvals[i], 1)}")
 
 ax[1].set_xlabel("$\hat x$")
 ax[0].set_ylabel("$u$, $v$")

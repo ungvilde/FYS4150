@@ -75,7 +75,6 @@ int main()
 
   // loop through different possibilities for N
   for(int i=0; i < M; i++){
-    std::cout << "N = " << N << std::endl; 
     A = make_tridiag(N);
     iterations = 0;
     converged = false;
