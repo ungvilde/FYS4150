@@ -98,7 +98,6 @@ int main()
   // find and plot results for N=10
   N = 10;
   A = make_tridiag(N, a, d);
-  maxiter = 50000;
   arma::vec eigenvalues_N10;
   arma::mat eigenvectors_N10;
 
@@ -108,7 +107,9 @@ int main()
   arma::uvec inds = { 0, 1, 2 }; // get the three eigenvectors corresponding to the three lowest eigenvalues
   eigenvectors_N10.cols(inds).print("Solutions"); 
   arma::mat V = eigenvectors_N10.cols(inds);
+  arma::mat lambda = eigenvalues_N10(inds);
   V.save("data/problem6_numerical_N10.txt", arma::raw_ascii);
+  lambda.save("data/problem6_numerical_N10_eigenvals.txt", arma::raw_ascii);
 
   arma::vec eigvals_analytic_N10(N); //eigenvalues
   arma::mat eigvecs_analytic_N10 = arma::mat(N,N); //eigenvectors
@@ -126,13 +127,15 @@ int main()
   jacobi_eigensolver(A, eps, eigenvalues_N100, eigenvectors_N100, maxiter, iterations, converged);
   std::cout << "Converged after " << iterations << " iterations." << std::endl;
   V = eigenvectors_N100.cols(inds);
+  lambda = eigenvalues_N100(inds);
   V.save("data/problem6_numerical_N100.txt", arma::raw_ascii);
+  lambda.save("data/problem6_numerical_N100_eigenvals.txt", arma::raw_ascii);
 
   arma::vec eigvals_analytic_N100(N); //eigenvalues
   arma::mat eigvecs_analytic_N100 = arma::mat(N,N); //eigenvectors
   solve_analytic(N, a, d, eigvals_analytic_N100, eigvecs_analytic_N100);
-  V_analytic_N10 = eigvecs_analytic_N100.cols(inds);
-  V_analytic_N10.save("data/problem6_analytic_N100.txt", arma::raw_ascii);
+  arma::mat V_analytic_N100 = eigvecs_analytic_N100.cols(inds);
+  V_analytic_N100.save("data/problem6_analytic_N100.txt", arma::raw_ascii);
 
   return 0;
 }
