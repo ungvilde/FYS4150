@@ -8,12 +8,12 @@ int main()
   // Problem 2: 
   // Compare armadillo and analytical solution
   int N = 6; // number of equations to solve
-  double h = 0.01; //stepsize
+  double h = 1/N; //stepsize
   double d = 2. / (h*h); // main diagonal
   double a = -1. / (h*h); // upper + lower diagonal
 
   // make tridiagonal matrix
-  arma::mat A = make_tridiag(N, a, d);
+  arma::mat A = make_tridiag(N);
 
   // solve eigenvalue problem using armadillo
   arma::vec eigvals_arma;
@@ -24,7 +24,7 @@ int main()
   // find analytic solution
   arma::vec eigvals_analytic(N); //eigenvalues
   arma::mat eigvecs_analytic = arma::mat(N,N); //eigenvectors
-  solve_analytic(N, a, d, eigvals_analytic, eigvecs_analytic);
+  solve_analytic(N, eigvals_analytic, eigvecs_analytic);
 
   // now we compare the solutions
   double eps = 1e-10;
@@ -52,10 +52,11 @@ int main()
   arma::vec eigenvals_numerical;
   arma::mat eigenvecs_numerical;
   int iterations = 0;
-  int maxiter = 100;
+  int maxiter = 1000;
   bool converged = false;
 
-  A = make_tridiag(6, a, d);
+  A = make_tridiag(6);
+  A.print("A matrix");
   jacobi_eigensolver(A, eps, eigenvals_numerical, eigenvecs_numerical, maxiter, iterations, converged);
   std::cout << "Converged after " << iterations << " iterations." << std::endl;
 
@@ -75,7 +76,7 @@ int main()
   // loop through different possibilities for N
   for(int i=0; i < M; i++){
     std::cout << "N = " << N << std::endl; 
-    A = make_tridiag(N, a, d);
+    A = make_tridiag(N);
     iterations = 0;
     converged = false;
     arma::vec eigenvalues_N;
@@ -97,7 +98,7 @@ int main()
   // problem 6
   // find and plot results for N=10
   N = 10;
-  A = make_tridiag(N, a, d);
+  A = make_tridiag(N);
   arma::vec eigenvalues_N10;
   arma::mat eigenvectors_N10;
 
@@ -113,13 +114,13 @@ int main()
 
   arma::vec eigvals_analytic_N10(N); //eigenvalues
   arma::mat eigvecs_analytic_N10 = arma::mat(N,N); //eigenvectors
-  solve_analytic(N, a, d, eigvals_analytic_N10, eigvecs_analytic_N10);
+  solve_analytic(N, eigvals_analytic_N10, eigvecs_analytic_N10);
   arma::mat V_analytic_N10 = eigvecs_analytic_N10.cols(inds);
   V_analytic_N10.save("data/problem6_analytic_N10.txt", arma::raw_ascii);
 
   // repeat for N=100
   N = 100;
-  A = make_tridiag(N, a, d);
+  A = make_tridiag(N);
   arma::vec eigenvalues_N100;
   arma::mat eigenvectors_N100;
 
@@ -132,7 +133,7 @@ int main()
 
   arma::vec eigvals_analytic_N100(N); //eigenvalues
   arma::mat eigvecs_analytic_N100 = arma::mat(N,N); //eigenvectors
-  solve_analytic(N, a, d, eigvals_analytic_N100, eigvecs_analytic_N100);
+  solve_analytic(N, eigvals_analytic_N100, eigvecs_analytic_N100);
   arma::mat V_analytic_N100 = eigvecs_analytic_N100.cols(inds);
   V_analytic_N100.save("data/problem6_analytic_N100.txt", arma::raw_ascii);
 
