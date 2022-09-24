@@ -119,7 +119,6 @@ int main()
 
   // repeat for N=100
   N = 100;
-  maxiter = 50000;
   A = make_tridiag(N, a, d);
   arma::vec eigenvalues_N100;
   arma::mat eigenvectors_N100;
