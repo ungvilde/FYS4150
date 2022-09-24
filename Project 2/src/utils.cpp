@@ -2,8 +2,12 @@
 
 
 // make tridiagonal matrix A = tridag(a, d, a) where A is NxN
-arma::mat make_tridiag(int N, double a, double d)
+arma::mat make_tridiag(int N)
 {
+  double h = 1. / N; //stepsize
+  double d = 2. / (h*h); // main diagonal
+  double a = -1. / (h*h); // upper + lower diagonal
+
   arma::mat A = arma::mat(N, N).fill(0.);
   A.diag() = arma::vec(N).fill(d);
   A.diag(-1) = arma::vec(N-1).fill(a);
@@ -12,9 +16,12 @@ arma::mat make_tridiag(int N, double a, double d)
 }
 
 //find analytic eigenvalue/vector solution to tridiagonal matrix A = tridiag(a,d,a) where A in NxN
-void solve_analytic(int N, double a, double d, arma::vec& eigvals, arma::mat& eigvecs)
+void solve_analytic(int N, arma::vec& eigvals, arma::mat& eigvecs)
 { 
   double pi = 3.14159265358979323846; 
+  double h = 1/N; //stepsize
+  double d = 2. / (h*h); // main diagonal
+  double a = -1. / (h*h); // upper + lower diagonal
 
   for(int i = 1; i < N+1; i++)
   {
