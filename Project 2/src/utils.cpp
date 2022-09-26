@@ -4,7 +4,7 @@
 // make tridiagonal matrix A = tridag(a, d, a) where A is NxN
 arma::mat make_tridiag(int N)
 {
-  double h = 1. / N; //stepsize
+  double h = 1. / (N+1); //stepsize
   double d = 2. / (h*h); // main diagonal
   double a = -1. / (h*h); // upper + lower diagonal
 
@@ -19,7 +19,7 @@ arma::mat make_tridiag(int N)
 void solve_analytic(int N, arma::vec& eigvals, arma::mat& eigvecs)
 { 
   double pi = 3.14159265358979323846; 
-  double h = 1/N; //stepsize
+  double h = 1./(N+1); //stepsize
   double d = 2. / (h*h); // main diagonal
   double a = -1. / (h*h); // upper + lower diagonal
 

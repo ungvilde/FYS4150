@@ -50,7 +50,7 @@ fig.tight_layout()
 plt.savefig("figs/problem5.pdf")
 
 # problem 6a
-N = 10
+N = 9
 xhat = np.linspace(0, 1, N+2) # include boundary points
 v1, v2, v3 = readfile1("data/problem6_numerical_N10.txt")
 a1, a2, a3 = readfile1("data/problem6_analytic_N10.txt")
@@ -72,7 +72,7 @@ ax[1].plot(xhat, a2, label = "$u(\hat x_i)$")
 ax[1].plot(xhat, v2, '--', label = "$v_i$")
 ax[1].hlines(y=0,xmin=0,xmax=1, linestyles='dotted', colors="black", linewidths=1)
 ax[2].plot(xhat, a3, label = "$u(\hat x_i)$")
-ax[2].plot(xhat, v3, '--', label = "$v_i$")
+ax[2].plot(xhat, -1*np.array(v3), '--', label = "$v_i$")
 ax[2].hlines(y=0,xmin=0,xmax=1, linestyles='dotted', colors="black", linewidths=1)
 
 for i in range(3):
@@ -87,7 +87,7 @@ plt.tight_layout()
 plt.savefig("figs/problem6_N10.pdf")
 
 # problem 6b
-N = 100
+N = 99
 xhat = np.linspace(0, 1, N+2) 
 v1, v2, v3 = readfile1("data/problem6_numerical_N100.txt")
 a1, a2, a3 = readfile1("data/problem6_analytic_N100.txt")
@@ -110,7 +110,7 @@ ax[1].plot(xhat, a2, label = "$u(\hat x_i)$")
 ax[1].plot(xhat, v2, '--', label = "$v_i$")
 ax[1].hlines(y=0,xmin=0,xmax=1, linestyles='dotted', colors="black", linewidths=1)
 ax[2].plot(xhat, a3, label = "$u(\hat x_i)$")
-ax[2].plot(xhat, v3, '--', label = "$v_i$")
+ax[2].plot(xhat, -1*np.array(v3), '--', label = "$v_i$")
 ax[2].hlines(y=0,xmin=0,xmax=1, linestyles='dotted', colors="black", linewidths=1)
 
 for i in range(3):

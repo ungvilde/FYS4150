@@ -8,7 +8,7 @@ int main()
   // Problem 2: 
   // Compare armadillo and analytical solution
   int N = 6; // number of equations to solve
-  double h = 1/N; //stepsize
+  double h = 1/(N+1); //stepsize
   double d = 2. / (h*h); // main diagonal
   double a = -1. / (h*h); // upper + lower diagonal
 
@@ -29,7 +29,13 @@ int main()
   // now we compare the solutions
   double eps = 1e-10;
   std::cout << "Solution to problem 2:" << std::endl;
+  eigvals_analytic.print("Analytic eigenvalue solution:");
+  eigvecs_analytic.print("Analytic eigenvector solution:");
+  eigvals_arma.print("Armadillo eigenvalue solution:");
+  eigvecs_arma.print("Armadillo eigenvector solution:");
+
   compare_solutions(eigvecs_analytic, eigvals_analytic, eigvecs_arma, eigvals_arma, eps);
+  std::cout << " " << std::endl;
 
   // Problem 3: 
   // test max_offdiag_symmetric 
@@ -46,9 +52,11 @@ int main()
   double max_elem = max_offdiag_symmetric(A_test, k, l);
   std::cout << "Max. absolute off-diagonal element: " << max_elem << std::endl;
   std::cout << "With indices: k=" << k << " and l=" << l << std::endl;
+  std::cout << " " << std::endl;
 
   // Problem 4: 
   // test jacobi rotation algorithm
+  std::cout << "Solution to problem 4:" << std::endl;
   arma::vec eigenvals_numerical;
   arma::mat eigenvecs_numerical;
   int iterations = 0;
@@ -65,9 +73,11 @@ int main()
 
   std::cout << "Comparing results with analytical solution:" << std::endl;
   compare_solutions(eigvecs_analytic, eigvals_analytic, eigenvecs_numerical, eigenvals_numerical, eps);
+  std::cout << " " << std::endl;
 
   // Problem 5:
   // checking how num. iterations of algorithm scales with matrix size
+  std::cout << "Solution to problem 5:" << std::endl;
   int M = 7; // num. solutions of varying N to compute
   arma::mat data_values = arma::mat(M, 3);
   N = 4; // start with 2^2 (up to 2^8)
@@ -93,10 +103,12 @@ int main()
 
   data_values.save("data/problem5.txt", arma::raw_ascii);
   // from here, make plot in python with plot.py
+  std::cout << " " << std::endl;
 
   // problem 6
   // find and plot results for N=10
-  N = 10;
+  std::cout << "Solution to problem 6:" << std::endl;
+  N = 9;
   A = make_tridiag(N);
   arma::vec eigenvalues_N10;
   arma::mat eigenvectors_N10;
@@ -105,7 +117,6 @@ int main()
   std::cout << "Converged after " << iterations << " iterations." << std::endl;
 
   arma::uvec inds = { 0, 1, 2 }; // get the three eigenvectors corresponding to the three lowest eigenvalues
-  eigenvectors_N10.cols(inds).print("Solutions"); 
   arma::mat V = eigenvectors_N10.cols(inds);
   arma::mat lambda = eigenvalues_N10(inds);
   V.save("data/problem6_numerical_N10.txt", arma::raw_ascii);
@@ -118,7 +129,7 @@ int main()
   V_analytic_N10.save("data/problem6_analytic_N10.txt", arma::raw_ascii);
 
   // repeat for N=100
-  N = 100;
+  N = 99;
   A = make_tridiag(N);
   arma::vec eigenvalues_N100;
   arma::mat eigenvectors_N100;
