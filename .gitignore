@@ -2,3 +2,5 @@
 Project 2/.vscode/c_cpp_properties.json
 Project 2/main.exe
 Project 2/data/.DS_Store
+*.exe
+*.json
