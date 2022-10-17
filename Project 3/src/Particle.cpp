@@ -36,6 +36,18 @@ arma::vec Particle::velocity()
     return v;
 }
 
+// Method that updates the velocity
+void Particle::update_velocity(arma::vec v_update)
+{
+    v = v_update;
+}
+
+// Method that updates the velocity
+void Particle::update_position(arma::vec r_update)
+{
+    r = r_update;
+}
+
 // // Method that returns a string with info
 // std::string Particle::info()
 // {

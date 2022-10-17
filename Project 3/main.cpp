@@ -12,30 +12,44 @@
 int main()
 {
     double q = 1;
-    double m = 1;
+    double m = 40.078;
     arma::vec r1 = arma::vec("20. 0. 20.");
     arma::vec v1 = arma::vec("0. 25. 0.");
 
-    Particle test_particle(q, m, v1, r1);
+    Particle p1(q, m, r1, v1);
 
-    arma::vec r2 = arma::vec("25. 25. 0.");
-    arma::vec v2 = arma::vec("0. 40. 5.");
+    //arma::vec r2 = arma::vec("25. 25. 0.");
+    //arma::vec v2 = arma::vec("0. 40. 5.");
+    //Particle second_test_particle(q, m, v2, r2);
+    double B0 = 9.65 * 10;
+    double V0 = 2.41*1000000;
+    double d = 500;
+    PenningTrap test_trap(B0, V0, d);
 
-    Particle second_test_particle(q, m, v2, r2);
+    test_trap.add_particle(p1);
+    double dt = 0.001;
+    int N_steps = 50000; // 50/dt
 
-    PenningTrap test_trap(1, 25, 500);
-
-    test_trap.add_particle(test_particle);
-    test_trap.add_particle(second_test_particle);
+    arma::vec x_vals = arma::vec(N_steps, arma::fill::zeros);
+    arma::vec y_vals = arma::vec(N_steps, arma::fill::zeros);
+    arma::vec z_vals = arma::vec(N_steps, arma::fill::zeros);
     
-    arma::vec F1 = test_trap.total_force_external(0);
-    F1.print("External fields force:");
+    x_vals(0) = 20.;
+    y_vals(0) = 0.;
+    z_vals(0) = 20.;
 
-    arma::vec F2 = test_trap.total_force_particles(0);
-    F2.print("Other particles force:");
+    std::cout << "Initial position:\n" << test_trap.p[0].position() << std::endl;
+    for(int i = 1; i < N_steps; i++)
+    {
+        test_trap.evolve_forward_Euler(dt);
+        arma::vec r = test_trap.p[0].position();
+        x_vals(i) = r(0);
+        y_vals(i) = r(1);
+        z_vals(i) = r(2);
+    }
 
-    arma::vec F = test_trap.total_force(0);   
-    F.print("Total force:");
+    x_vals.save("x_values.txt", arma::raw_ascii);
+    z_vals.save("z_values.txt", arma::raw_ascii);
 
     return 0;
 }

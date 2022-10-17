@@ -28,7 +28,6 @@ arma::vec PenningTrap::external_E_field(arma::vec r)
 {
     // computed as gradient of - V = -V0 / (2*d**2) * (2z**2 - x**2 - y**2)
     arma::vec E = arma::vec(3, arma::fill::zeros);
-    r.print("r vector:");
     E(0) = -2.*r(0);
     E(1) = -2.*r(1);
     E(2) = 4.*r(2);
@@ -52,7 +51,7 @@ arma::vec PenningTrap::force_particle(int i, int j)
     double q_j = p.at(j).charge();
     arma::vec r_j = p.at(j).position();
 
-    arma::vec E = k_e * q_j * (r_i - r_j) / pow(norm(r_i - r_j), 3);
+    arma::vec E = k_e * q_j * (r_i - r_j) / (norm(r_i - r_j) * norm(r_i - r_j));
 
     // Force on particle i from particle j
     return q_i * E;
@@ -103,12 +102,41 @@ arma::vec PenningTrap::total_force(int i)
 // Evolve the system one time step (dt) using Runge-Kutta 4th order
 void PenningTrap::evolve_RK4(double dt)
 {
+    // your implementation of the Runge-Kutta algorithm for one timestep should probably go something like this:
+        // Make a temporary copy of all the particles in the Penning trap, 
+        // since we’ll need the original positions and velocities to perform the final RK4 update step.
 
+        // For each particle, compute k_r1 and k_v1
+        // For each particle, update the position and velocity using the corresponding k_r1 and k_v1
+
+        // For each particle, compute  k_r2 and k_v2
+        // For each particle, update the position and velocity using the corresponding k_r2 and k_v2 
+        // …
+        // For each particle, compute k_r4 and k_v4
+        // Final step: For each particle, perform the proper RK4 update of position and 
+        // velocity using the original particle position and velocity, together with all the k_ri and k_vi computed above
 }
 
 // Evolve the system one time step (dt) using Forward Euler
 void PenningTrap::evolve_forward_Euler(double dt)
 {
+    int N = p.size();
 
+    for(int i=0; i<N; i++)
+    {
+        // update velocity of particle i
+        arma::vec v = p.at(i).velocity();
+        double m = p.at(i).mass();
+        arma::vec F = total_force(i);
+        arma::mat v_update = v + dt * F / m;
+
+        // update position of particle i
+        arma::vec r = p.at(i).position();
+        arma::vec r_update = r + dt * v_update; // Euler-Cromer update
+
+        p.at(i).update_position(r_update);
+        p.at(i).update_velocity(v_update);
+    }
+    
 }
 

@@ -33,6 +33,12 @@ class Particle
     // Method that returns the velocity
     arma::vec velocity();
 
+    // Method that updates the velocity
+    void update_velocity(arma::vec v_update);
+
+    // Method that updates the position
+    void update_position(arma::vec r_update);
+
     // Method that returns a string with info about the particle
     std::string info();
 
