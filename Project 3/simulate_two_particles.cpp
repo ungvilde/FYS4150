@@ -8,7 +8,7 @@
 #include "PenningTrap.hpp"
 
 void two_particle_experiment(PenningTrap penning_trap, Particle p1, Particle p2, bool are_interacting, double dt, double tot_time);
-void single_particle_experiment(PenningTrap penning_trap, Particle p, double dt, double tot_time, std::string evolve_method);
+void single_particle_experiment(PenningTrap penning_trap, Particle p, int N_steps, double tot_time, std::string evolve_method);
 arma::vec single_particle_analytic_solution(double time, arma::vec v0, arma::vec r0);
 
 int main()
@@ -33,8 +33,15 @@ int main()
 
     two_particle_experiment(penning_trap, p1, p2, true, 0.001, 50);
     two_particle_experiment(penning_trap, p1, p2, false, 0.001, 50);
-    single_particle_experiment(penning_trap, p1, 0.001, 50, "FE");
-    single_particle_experiment(penning_trap, p1, 0.001, 50, "RK4");
+    single_particle_experiment(penning_trap, p1, 4000, 50, "FE");
+    single_particle_experiment(penning_trap, p1, 8000, 50, "FE");
+    single_particle_experiment(penning_trap, p1, 16000, 50, "FE");
+    single_particle_experiment(penning_trap, p1, 32000, 50, "FE");
+
+    single_particle_experiment(penning_trap, p1, 4000, 50, "RK4");
+    single_particle_experiment(penning_trap, p1, 8000, 50, "RK4");
+    single_particle_experiment(penning_trap, p1, 16000, 50, "RK4");
+    single_particle_experiment(penning_trap, p1, 32000, 50, "RK4");
 
     return 0;
 }
@@ -122,10 +129,10 @@ void two_particle_experiment(PenningTrap penning_trap, Particle p1, Particle p2,
 
 }
 
-void single_particle_experiment(PenningTrap penning_trap, Particle p, double dt, double tot_time, std::string evolve_method)
+void single_particle_experiment(PenningTrap penning_trap, Particle p, int N_steps, double tot_time, std::string evolve_method)
 {
     penning_trap.add_particle(p);
-    int N_steps = tot_time/dt;
+    double dt = tot_time / N_steps;
     double time;
     arma::vec r_true;
     arma::vec r;

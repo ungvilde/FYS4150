@@ -1,4 +1,3 @@
-from cProfile import label
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
@@ -34,7 +33,7 @@ def plot_phase_space(x1, v1, x2, v2, label1, label2, title1, title2, save=False)
     plt.title(title1 + " " + title2)
     plt.legend()
     plt.xlabel("$x$ values ($\mu$m)")
-    plt.ylabel("$v_x$ values ($\mu$s / $\mu$m)")
+    plt.ylabel("$v_x$ values ($\mu$m / $\mu$s)")
     plt.tight_layout()
     if save:
         plt.savefig(f"figs/phase_space_{label1}_{label2}_{title1}.pdf")
@@ -49,11 +48,40 @@ def plot_xyz_trajectory(x1, y1, z1, x2, y2, z2, label1, label2, title):
     plt.tight_layout()
     plt.savefig(f"figs/xyz_trajectory__{label1}_{label2}_{title}.pdf")
 
+def plot_rel_error(errors_list, title, Nsteps_list = [4000, 8000, 16000, 32000], tot_time=50):
+    cm = 1/2.54
+    plt.figure(figsize=(12*cm, 8*cm))
+    
+    for i in range(len(errors_list)):
+        N_steps = Nsteps_list[i]
+        dt = tot_time/N_steps
+        time = np.arange(dt, tot_time, dt)
+        rel_error = errors_list[i]
+        plt.plot(time, rel_error, label = f"$N = {N_steps}$")
+    plt.yscale('log')
+    plt.ylabel("Relative error")
+    #plt.ylabel("$\dfrac{|r_i - r|}{|r|}$")    
+    plt.xlabel("Time ($\mu$s)")
+    plt.legend()
+    plt.title(title)
+    plt.tight_layout()    
+    plt.savefig(f"figs/rel_error_{title}.pdf")
 
-error_RK4 = readfile("data/rel_error_RK4_dt_0.001.txt")
-plt.plot(error_RK4)
+error_RK4_4 = readfile("data/rel_error_RK4_dt_0.0125.txt")
+error_RK4_8 = readfile("data/rel_error_RK4_dt_0.00625.txt")
+error_RK4_16 = readfile("data/rel_error_RK4_dt_0.003125.txt")
+error_RK4_32 = readfile("data/rel_error_RK4_dt_0.0015625.txt")
 
-plt.show()
+errors = [error_RK4_4[1:], error_RK4_8[1:], error_RK4_16[1:], error_RK4_32[1:]]
+plot_rel_error(errors, "Runge-Kutta 4th order")
+
+error_FE_4 = readfile("data/rel_error_FE_dt_0.0125.txt")
+error_FE_8 = readfile("data/rel_error_FE_dt_0.00625.txt")
+error_FE_16 = readfile("data/rel_error_FE_dt_0.003125.txt")
+error_FE_32 = readfile("data/rel_error_FE_dt_0.0015625.txt")
+
+errors = [error_FE_4[1:], error_FE_8[1:], error_FE_16[1:], error_FE_32[1:]]
+plot_rel_error(errors, "Forward Euler")
 
 # plot with interaction
 p1_x = readfile("data/x_values_RK4_p1_interaction_1_dt_0.001.txt")
