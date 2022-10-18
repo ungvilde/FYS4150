@@ -50,6 +50,10 @@ def plot_xyz_trajectory(x1, y1, z1, x2, y2, z2, label1, label2, title):
     plt.savefig(f"figs/xyz_trajectory__{label1}_{label2}_{title}.pdf")
 
 
+error_RK4 = readfile("data/rel_error_RK4_dt_0.001.txt")
+plt.plot(error_RK4)
+
+plt.show()
 
 # plot with interaction
 p1_x = readfile("data/x_values_RK4_p1_interaction_1_dt_0.001.txt")
@@ -78,7 +82,6 @@ p1_z = readfile("data/z_values_RK4_p1_interaction_0_dt_0.001.txt")
 p2_x = readfile("data/x_values_RK4_p2_interaction_0_dt_0.001.txt")
 p2_y = readfile("data/y_values_RK4_p2_interaction_0_dt_0.001.txt")
 p2_z = readfile("data/z_values_RK4_p2_interaction_0_dt_0.001.txt")
-
 
 p1_v_x = readfile("data/v_x_values_RK4_p1_interaction_0_dt_0.001.txt")
 p1_v_z = readfile("data/v_z_values_RK4_p1_interaction_0_dt_0.001.txt")
