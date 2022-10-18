@@ -115,6 +115,98 @@ void PenningTrap::evolve_RK4(double dt)
         // For each particle, compute k_r4 and k_v4
         // Final step: For each particle, perform the proper RK4 update of position and 
         // velocity using the original particle position and velocity, together with all the k_ri and k_vi computed above
+    
+    int N = p.size();
+    std::vector<Particle> p_init = p; // temp. copy of particles in Penning trap
+
+    // compute k_v1 and k_r1
+    std::vector<arma::vec> k_v1(N);
+    std::vector<arma::vec> k_r1(N);
+
+    for(int i=0; i<N; i++)
+    {
+        arma::vec v = p.at(i).velocity();
+        double m = p.at(i).mass();
+        arma::vec F = total_force(i);
+        k_v1.at(i) = dt * F / m;
+        k_r1.at(i) = dt * v; 
+    }
+
+    for(int i=0; i<N; i++)
+    {
+        arma::vec v = p_init.at(i).velocity();
+        arma::vec r = p_init.at(i).position();
+        p.at(i).update_position(r + 0.5*k_r1.at(i));
+        p.at(i).update_velocity(v + 0.5*k_v1.at(i));
+    }
+
+    // compute k_v2 and k_r2
+    std::vector<arma::vec> k_v2(N);
+    std::vector<arma::vec> k_r2(N);
+
+    for(int i=0; i<N; i++)
+    {
+        arma::vec v = p.at(i).velocity();
+        double m = p.at(i).mass();
+        arma::vec F = total_force(i);
+        k_v2.at(i) = dt * F / m;
+        k_r2.at(i) = dt * v; 
+    }
+
+    for(int i=0; i<N; i++)
+    {
+        arma::vec v = p_init.at(i).velocity();
+        arma::vec r = p_init.at(i).position();
+        p.at(i).update_position(r + 0.5*k_r2.at(i));
+        p.at(i).update_velocity(v + 0.5*k_v2.at(i));
+    }
+
+    // compute k_v3 and k_r3
+    std::vector<arma::vec> k_v3(N);
+    std::vector<arma::vec> k_r3(N);
+
+    for(int i=0; i<N; i++)
+    {
+        arma::vec v = p.at(i).velocity();
+        double m = p.at(i).mass();
+        arma::vec F = total_force(i);
+        k_v3.at(i) = dt * F / m;
+        k_r3.at(i) = dt * v; // Euler-Cromer update
+    }
+
+    for(int i=0; i<N; i++)
+    {
+        arma::vec v = p_init.at(i).velocity();
+        arma::vec r = p_init.at(i).position();
+        p.at(i).update_position(r + k_r3.at(i));
+        p.at(i).update_velocity(v + k_v3.at(i));
+    }
+
+    // compute k_v4 and k_r4
+    std::vector<arma::vec> k_v4(N);
+    std::vector<arma::vec> k_r4(N);
+
+    for(int i=0; i<N; i++)
+    {
+        arma::vec v = p.at(i).velocity();
+        double m = p.at(i).mass();
+        arma::vec F = total_force(i);
+        k_v4.at(i) = dt * F / m; 
+        k_r4.at(i) = dt * v; // Euler-Cromer update
+    }
+
+    for(int i=0; i<N; i++)
+    {
+        arma::vec v = p_init.at(i).velocity();
+        arma::vec r = p_init.at(i).position();
+
+        arma::vec v_update = v + 1./6*(k_v1.at(i) + 2.*k_v2.at(i) + 2.*k_v3.at(i) + k_v4.at(i));
+        arma::vec r_update = r + 1./6*(k_r1.at(i) + 2.*k_r2.at(i) + 2.*k_r3.at(i) + k_r4.at(i));
+
+        p.at(i).update_position(r_update);
+        p.at(i).update_velocity(v_update);
+    }
+    
 }
 
 // Evolve the system one time step (dt) using Forward Euler
@@ -122,20 +214,27 @@ void PenningTrap::evolve_forward_Euler(double dt)
 {
     int N = p.size();
 
+    std::vector<arma::vec> r_updates(N);
+    std::vector<arma::vec> v_updates(N);
+
     for(int i=0; i<N; i++)
     {
-        // update velocity of particle i
         arma::vec v = p.at(i).velocity();
         double m = p.at(i).mass();
         arma::vec F = total_force(i);
         arma::mat v_update = v + dt * F / m;
 
-        // update position of particle i
         arma::vec r = p.at(i).position();
         arma::vec r_update = r + dt * v_update; // Euler-Cromer update
 
-        p.at(i).update_position(r_update);
-        p.at(i).update_velocity(v_update);
+        r_updates.at(i) = r_update;
+        v_updates.at(i) = v_update;
+    }
+
+    for(int i=0; i<N; i++)
+    {
+        p.at(i).update_position(r_updates.at(i));
+        p.at(i).update_velocity(v_updates.at(i));
     }
     
 }

@@ -13,8 +13,11 @@ def readfile(filename):
 
     return np.array(values)
 
-x_vals_FE = readfile("x_values.txt")
-z_vals_FE = readfile("z_values.txt")
+x_vals_FE = readfile("data/x_values_FE.txt")
+z_vals_FE = readfile("data/z_values_FE.txt")
+
+x_vals_RK4 = readfile("data/x_values_RK4.txt")
+z_vals_RK4 = readfile("data/z_values_RK4.txt")
 
 def solve_analytic(t):
     v0 = 25 # init. velocity
@@ -66,21 +69,26 @@ for t in time:
 
 _, _, _, R_pluss, R_minus = solve_analytic(0)
 
-plt.plot(time, z_vals,label = "Analytic")
-plt.plot(time, z_vals_FE, '--', label = "FE; dt = 0.001")
+plt.plot(time, z_vals, 'k', label = "Analytic")
+plt.plot(time, z_vals_RK4, 'r--', label = "RK4; dt = 0.001")
+plt.plot(time, z_vals_FE, 'b:', label = "FE; dt = 0.001")
 plt.legend()
 plt.xlabel("$\mu s$")
 plt.ylabel("$\mu m$")
+plt.title("$z$ values")
 #plt.hlines(y =[R_minus, R_pluss], xmin = 0, xmax=49)
+plt.savefig("figs/zvals_FE_analytic_single_particle.pdf")
 plt.show()
 
-plt.plot(time, x_vals,label = "Analytic")
-plt.plot(time, x_vals_FE, '--', label = "FE; dt = 0.001")
+plt.plot(time, x_vals, 'k',label = "Analytic")
+plt.plot(time, x_vals_RK4, 'r--', label = "RK4; dt = 0.001")
+plt.plot(time, x_vals_FE, 'b:', label = "FE; dt = 0.001")
 plt.legend()
 plt.xlabel("$\mu s$")
 plt.ylabel("$\mu m$")
+plt.title("$x$ values")
 #plt.hlines(y =[R_minus, R_pluss], xmin = 0, xmax=49)
+plt.savefig("figs/xvals_FE_analytic_single_particle.pdf")
 plt.show()
 
 #plt.plot(time, y_vals)
-#plt.plot(time, z_vals)
