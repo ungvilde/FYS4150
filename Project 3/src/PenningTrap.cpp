@@ -102,20 +102,6 @@ arma::vec PenningTrap::total_force(int i)
 // Evolve the system one time step (dt) using Runge-Kutta 4th order
 void PenningTrap::evolve_RK4(double dt)
 {
-    // your implementation of the Runge-Kutta algorithm for one timestep should probably go something like this:
-        // Make a temporary copy of all the particles in the Penning trap, 
-        // since we’ll need the original positions and velocities to perform the final RK4 update step.
-
-        // For each particle, compute k_r1 and k_v1
-        // For each particle, update the position and velocity using the corresponding k_r1 and k_v1
-
-        // For each particle, compute  k_r2 and k_v2
-        // For each particle, update the position and velocity using the corresponding k_r2 and k_v2 
-        // …
-        // For each particle, compute k_r4 and k_v4
-        // Final step: For each particle, perform the proper RK4 update of position and 
-        // velocity using the original particle position and velocity, together with all the k_ri and k_vi computed above
-    
     int N = p.size();
     std::vector<Particle> p_init = p; // temp. copy of particles in Penning trap
 
@@ -195,6 +181,7 @@ void PenningTrap::evolve_RK4(double dt)
         k_r4.at(i) = dt * v; // Euler-Cromer update
     }
 
+    // do final update of position and velocity
     for(int i=0; i<N; i++)
     {
         arma::vec v = p_init.at(i).velocity();

@@ -1,8 +1,5 @@
-from cProfile import label
-from importlib.resources import read_text
 import numpy as np
 import matplotlib.pyplot as plt
-from regex import V0
 
 def readfile(filename):
 
@@ -14,9 +11,11 @@ def readfile(filename):
     return np.array(values)
 
 x_vals_FE = readfile("data/x_values_FE.txt")
+y_vals_FE = readfile("data/y_values_FE.txt")
 z_vals_FE = readfile("data/z_values_FE.txt")
 
 x_vals_RK4 = readfile("data/x_values_RK4.txt")
+y_vals_RK4 = readfile("data/y_values_RK4.txt")
 z_vals_RK4 = readfile("data/z_values_RK4.txt")
 
 def solve_analytic(t):
@@ -51,7 +50,7 @@ def solve_analytic(t):
     x = A_pluss*np.cos(-w_pluss*t) + A_minus*np.cos(-w_minus*t)
     y = A_pluss*np.sin(-w_pluss*t) + A_minus*np.sin(-w_minus*t)
 
-    return x, y, z, R_pluss, R_minus
+    return x, y, z
 
 x_vals = []
 y_vals = []
@@ -59,16 +58,15 @@ z_vals = []
 
 dt = 0.001
 time = np.arange(0, 50, dt)
-print("N_steps = ", len(time))
-
 for t in time:
-    x, y, z, _, _ = solve_analytic(t)
+    x, y, z = solve_analytic(t)
     x_vals.append(x)
     y_vals.append(y)
     z_vals.append(z)
 
-_, _, _, R_pluss, R_minus = solve_analytic(0)
+cm = 1/2.54
 
+plt.figure(figsize=(12*cm, 8*cm))
 plt.plot(time, z_vals, 'k', label = "Analytic")
 plt.plot(time, z_vals_RK4, 'r--', label = "RK4; dt = 0.001")
 plt.plot(time, z_vals_FE, 'b:', label = "FE; dt = 0.001")
@@ -76,10 +74,10 @@ plt.legend()
 plt.xlabel("$\mu s$")
 plt.ylabel("$\mu m$")
 plt.title("$z$ values")
-#plt.hlines(y =[R_minus, R_pluss], xmin = 0, xmax=49)
+plt.tight_layout()
 plt.savefig("figs/zvals_FE_analytic_single_particle.pdf")
-plt.show()
 
+plt.figure(figsize=(12*cm, 8*cm))
 plt.plot(time, x_vals, 'k',label = "Analytic")
 plt.plot(time, x_vals_RK4, 'r--', label = "RK4; dt = 0.001")
 plt.plot(time, x_vals_FE, 'b:', label = "FE; dt = 0.001")
@@ -87,8 +85,16 @@ plt.legend()
 plt.xlabel("$\mu s$")
 plt.ylabel("$\mu m$")
 plt.title("$x$ values")
-#plt.hlines(y =[R_minus, R_pluss], xmin = 0, xmax=49)
+plt.tight_layout()
 plt.savefig("figs/xvals_FE_analytic_single_particle.pdf")
-plt.show()
 
-#plt.plot(time, y_vals)
+plt.figure(figsize=(12*cm, 8*cm))
+plt.plot(time, y_vals, 'k',label = "Analytic")
+plt.plot(time, y_vals_RK4, 'r--', label = "RK4; dt = 0.001")
+plt.plot(time, y_vals_FE, 'b:', label = "FE; dt = 0.001")
+plt.legend()
+plt.xlabel("$\mu$s")
+plt.ylabel("$\mu$m")
+plt.title("$y$ values")
+plt.tight_layout()
+plt.savefig("figs/yvals_FE_analytic_single_particle.pdf")

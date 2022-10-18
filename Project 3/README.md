@@ -1,11 +1,11 @@
 # Project 3
 
-build with Mac Silicone: 
-> CPATH=/opt/homebrew/include LIBRARY_PATH=/opt/homebrew/lib g++ main.cpp -std=c++11 -larmadillo src/*.cpp -I include -o main.exe
+build test with Mac Silicone: 
+> CPATH=/opt/homebrew/include LIBRARY_PATH=/opt/homebrew/lib g++ test_FE_RK4_single_particle.cpp -std=c++11 -larmadillo src/*.cpp -I include -o test.exe
 
-build:
-> g++ main.cpp -std=c++11 -larmadillo src/*.cpp -I include -o main.exe
+build test:
+> g++ test_FE_RK4_single_particle.cpp -std=c++11 -larmadillo src/*.cpp -I include -o test.exe
 
 run:
-> ./main.exe
+> ./test.exe
 
