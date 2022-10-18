@@ -140,6 +140,7 @@ void single_particle_experiment(PenningTrap penning_trap, Particle p, int N_step
     arma::vec v0 = penning_trap.p[0].velocity(); // initial velocity
 
     arma::vec rel_error = arma::vec(N_steps, arma::fill::zeros);
+    arma::vec error = arma::vec(N_steps, arma::fill::zeros);
 
     // compute position with Forward Euler
     for(int i = 1; i < N_steps; i++)
@@ -160,16 +161,15 @@ void single_particle_experiment(PenningTrap penning_trap, Particle p, int N_step
         r_true = single_particle_analytic_solution(time, v0, r0);
 
         rel_error(i) = arma::norm(r - r_true) / arma::norm(r_true);
+        error(i) = arma::norm(r - r_true);
+
     }
     std::ostringstream oss;
     oss << "_" << evolve_method << "_dt_" << dt;
     std::string experiment_info = oss.str();
     
     rel_error.save("data/rel_error" + experiment_info + ".txt", arma::raw_ascii);
-    // simulate single particle with different dt for 50us
-    // - plot relative error of r_i at each time step with all the different dt solutions
-    // - do this for both RK4 and FE
-    // - estimate error convergence
+    error.save("data/error" + experiment_info + ".txt", arma::raw_ascii);
 }
 
 arma::vec single_particle_analytic_solution(double time, arma::vec v0, arma::vec r0)
