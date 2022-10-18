@@ -20,13 +20,17 @@ class PenningTrap
     double V0; // applied potential
     double d; // characteristic dimension
     double k_e = 1.38935333 * 100000; // Coloumb constant
-    std::vector<Particle> p; // particles in the penning trap
+    std::vector<Particle> p; // particles in the Penning trap
+    bool are_interacting=true; // if there is interaction between particles in Penning trap; true by default
 
     // Constructor
     PenningTrap(double B0_in, double V0_in, double d_in);
 
     // Add a particle to the trap
     void add_particle(Particle p_in);
+
+    // Determine if particles interact in penning trap or not
+    void particle_interaction(bool are_interacting);
 
     // External electric field at point r=(x,y,z)
     arma::vec external_E_field(arma::vec r);  

@@ -47,6 +47,7 @@ int main()
 
     PenningTrap test_trap2(B0, V0, d);
     test_trap2.add_particle(p1);
+    //test_trap2.add_particle(p2);
 
     // compute position with Runge-Kutta 4th order
     for(int i = 1; i < N_steps; i++)

@@ -4,6 +4,7 @@
 #include <string>      // For string
 #include <stdlib.h>    // For rand (from C). For more powerful random number generation in C++ we should use <random>
 #include <stdexcept>   // For runtime_error
+#include <cmath>
 
 #include "PenningTrap.hpp"
 #include "Particle.hpp"
@@ -21,6 +22,12 @@ PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in)
 void PenningTrap::add_particle(Particle p_in)
 {
     PenningTrap::p.push_back(p_in);
+}
+
+// Determine if particles interact in penning trap or not
+void PenningTrap::particle_interaction(bool are_interacting)
+{
+    PenningTrap::are_interacting = are_interacting;
 }
 
 // External electric field at point r=(x,y,z)
@@ -50,8 +57,7 @@ arma::vec PenningTrap::force_particle(int i, int j)
     arma::vec r_i = p.at(i).position();
     double q_j = p.at(j).charge();
     arma::vec r_j = p.at(j).position();
-
-    arma::vec E = k_e * q_j * (r_i - r_j) / (norm(r_i - r_j) * norm(r_i - r_j));
+    arma::vec E = k_e * q_j * (r_i - r_j) / pow(norm(r_i - r_j), 3);
 
     // Force on particle i from particle j
     return q_i * E;
@@ -96,7 +102,16 @@ arma::vec PenningTrap::total_force(int i)
 {
     arma::vec F_external = total_force_external(i);
     arma::vec F_other_particles = total_force_particles(i);
-    return F_external + F_other_particles;
+    arma::vec F;
+    if(are_interacting)
+    {
+        F = F_external + F_other_particles;
+    } else
+    {
+        F = F_external;   
+    }
+
+    return F;
 }
 
 // Evolve the system one time step (dt) using Runge-Kutta 4th order
@@ -200,7 +215,6 @@ void PenningTrap::evolve_RK4(double dt)
 void PenningTrap::evolve_forward_Euler(double dt)
 {
     int N = p.size();
-
     std::vector<arma::vec> r_updates(N);
     std::vector<arma::vec> v_updates(N);
 
