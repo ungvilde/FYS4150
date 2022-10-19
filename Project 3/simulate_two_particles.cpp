@@ -162,7 +162,6 @@ void single_particle_experiment(PenningTrap penning_trap, Particle p, int N_step
 
         rel_error(i) = arma::norm(r - r_true) / arma::norm(r_true);
         error(i) = arma::norm(r - r_true);
-
     }
     std::ostringstream oss;
     oss << "_" << evolve_method << "_dt_" << dt;

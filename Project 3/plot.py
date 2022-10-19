@@ -24,6 +24,8 @@ def plot_xy_trajectory(x1, y1, x2, y2, label1, label2, title1, title2, save=Fals
     plt.tight_layout()
     if save:
         plt.savefig(f"figs/xy_trajectory_{label1}_{label2}_{title1}.pdf")
+        plt.close()
+
 
 def plot_position_time(position, time, label, title, save=False):
     cm = 1/2.54
@@ -36,6 +38,8 @@ def plot_position_time(position, time, label, title, save=False):
     plt.tight_layout()
     if save:
         plt.savefig(f"figs/position_time_{label}_{title}.pdf")
+        plt.close()
+
 
 def plot_phase_space(x1, v1, x2, v2, label1, label2, title1, title2, save=False):
     cm = 1/2.54
@@ -49,6 +53,8 @@ def plot_phase_space(x1, v1, x2, v2, label1, label2, title1, title2, save=False)
     plt.tight_layout()
     if save:
         plt.savefig(f"figs/phase_space_{label1}_{label2}_{title1}.pdf")
+        plt.close()
+
 
 def plot_xyz_trajectory(x1, y1, z1, x2, y2, z2, label1, label2, title, save=False):
     fig = plt.figure()
@@ -60,6 +66,8 @@ def plot_xyz_trajectory(x1, y1, z1, x2, y2, z2, label1, label2, title, save=Fals
     plt.tight_layout()
     if save:
         plt.savefig(f"figs/xyz_trajectory_{label1}_{label2}_{title}.pdf")
+        plt.close()
+
 
 def plot_rel_error(errors_list, title, Nsteps_list = [4000, 8000, 16000, 32000], tot_time=50):
     cm = 1/2.54
@@ -79,6 +87,8 @@ def plot_rel_error(errors_list, title, Nsteps_list = [4000, 8000, 16000, 32000],
     plt.title(title)
     plt.tight_layout()    
     plt.savefig(f"figs/rel_error_{title}.pdf")
+    plt.close()
+
 
 def convergence_rate(errors, Nstep=[4000,8000,16000,32000], tot_time=50):
     r = 0
@@ -165,3 +175,21 @@ plot_position_time(p2_z, np.arange(0, 50, 0.001), "Particle 2; $z$-values", "No 
 plot_xy_trajectory(p1_x, p1_y, p2_x, p2_y, "Particle 1", "Particle 2", "No interaction", "($T=50\mu$s)", save=True)
 plot_phase_space(p1_x, p1_v_x, p2_x, p2_v_x, "Particle 1", "Particle 2", "No interaction", "($T=50\mu$s)", save=True)
 plot_xyz_trajectory(p1_x, p1_y, p1_z, p2_x, p2_y, p2_z, "Particle 1", "Particle 2", "No interaction", save=True)
+
+# check that time dependence works
+
+# time = np.arange(0, 50, 0.001)
+
+# p1_z_time_dependent_FE = readfile("data/z_values_time_dependent_p1_f_0.7_w_2.2_FE_dt_0.001.txt")
+# p1_z_time_dependent_RK4 = readfile("data/z_values_time_dependent_p1_f_0.7_w_2.2_RK4_dt_0.001.txt")
+# p1_z_no_time_dependence_FE = readfile("data/z_values_FE.txt")
+# p1_z_no_time_dependence_RK4 = readfile("data/z_values_FE.txt")
+
+# plt.figure()
+# plt.plot(time, p1_z_no_time_dependence_FE, '--', label = "FE; No time dependence")
+# plt.plot(time, p1_z_no_time_dependence_RK4, ':', label = "RK4; No time dependence")
+
+# plt.plot(time, p1_z_time_dependent_FE,label = "FE; Time-dependent E field")
+# plt.plot(time, p1_z_time_dependent_RK4, '-.', label = "RK4; Time-dependent E field")
+# plt.legend()
+# plt.show()
