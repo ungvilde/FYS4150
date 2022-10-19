@@ -24,10 +24,40 @@ void PenningTrap::add_particle(Particle p_in)
     PenningTrap::p.push_back(p_in);
 }
 
+// Add n randomly initialised particles to the trap
+void PenningTrap::add_particle(int n_particles)
+{
+    for(int i=0; i<n_particles; i++)
+    {
+        arma::vec r = arma::vec(3).randn() *0.1* d;  
+        arma::vec v = arma::vec(3).randn() *0.1* d;
+        Particle p(1, 40.078, r, v); // m and q should maybe not be hardcoded?
+        add_particle(p);
+    }   
+}
+
 // Determine if particles interact in penning trap or not
 void PenningTrap::particle_interaction(bool are_interacting)
 {
     PenningTrap::are_interacting = are_interacting;
+}
+
+// count number of particles in Penning trap at a given time
+int PenningTrap::num_particles_in_trap()
+{
+    int N = p.size(); // Num particles added to trap
+    arma::vec r;
+    int N_trapped = 0;
+
+    for(int i=0; i < N; i++)
+    {
+        r = p.at(i).position();
+        if(arma::norm(r) <= d)
+        {
+            N_trapped += 1;
+        }
+    }
+    return N_trapped;
 }
 
 // External electric field at point r=(x,y,z)
@@ -44,7 +74,6 @@ arma::vec PenningTrap::external_E_field(arma::vec r)
         E(1) = -2.*r(1);
         E(2) = 4.*r(2);
     }
-    
 
     return -V0/(2*d*d)* E; //electric field from electrodes
 }
@@ -160,10 +189,10 @@ arma::vec PenningTrap::total_force_particles(int i)
 arma::vec PenningTrap::total_force(int i)
 {
     arma::vec F_external = total_force_external(i);
-    arma::vec F_other_particles = total_force_particles(i);
     arma::vec F;
     if(are_interacting)
     {
+        arma::vec F_other_particles = total_force_particles(i);
         F = F_external + F_other_particles;
     } else
     {
@@ -173,14 +202,14 @@ arma::vec PenningTrap::total_force(int i)
     return F;
 }
 
-// totale force on particle_i when external E field is time-dependent
+// total force on particle_i when external E field is time-dependent
 arma::vec PenningTrap::total_force(int i, double time)
 {
-    arma::vec F_external = total_force_external(i, time);
-    arma::vec F_other_particles = total_force_particles(i);
     arma::vec F;
+    arma::vec F_external = total_force_external(i, time);
     if(are_interacting)
     {
+        arma::vec F_other_particles = total_force_particles(i);
         F = F_external + F_other_particles;
     } else
     {
@@ -438,5 +467,4 @@ void PenningTrap::evolve_forward_Euler(double dt, double time)
         p.at(i).update_position(r_updates.at(i));
         p.at(i).update_velocity(v_updates.at(i));
     }
-    
 }

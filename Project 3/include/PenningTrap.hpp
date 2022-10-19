@@ -31,8 +31,14 @@ class PenningTrap
     // Add a particle to the trap
     void add_particle(Particle p_in);
 
+    // Add n randomly initialised particles to the trap
+    void add_particle(int n_particles);
+    
     // Determine if particles interact in penning trap or not
     void particle_interaction(bool are_interacting);
+
+    // count number of particles in Penning trap
+    int num_particles_in_trap();
 
     // External electric field at point r=(x,y,z)
     arma::vec external_E_field(arma::vec r);  
@@ -64,19 +70,19 @@ class PenningTrap
     // The total force on particle_i from both external fields and other particles
     arma::vec total_force(int i);
 
-    // Time dependent total force on particle_i 
+    // Total force on particle_i from time-dependent external E field, external B field, and other particles
     arma::vec total_force(int i, double time);
 
     // Evolve the system one time step (dt) using Runge-Kutta 4th order
     void evolve_RK4(double dt);
 
-    // Evolve the system one time step (dt) using Runge-Kutta 4th order
+    // Evolve the system one time step (dt) using Runge-Kutta 4th order with time-dependent external E field
     void evolve_RK4(double dt, double time);
 
     // Evolve the system one time step (dt) using Forward Euler
     void evolve_forward_Euler(double dt);
 
-    // Evolve the system one time step (dt) using Forward Euler with time dependent external E field
+    // Evolve the system one time step (dt) using Forward Euler with time-dependent external E field
     void evolve_forward_Euler(double dt, double time);
 
 };

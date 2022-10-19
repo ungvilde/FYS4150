@@ -193,3 +193,38 @@ plot_xyz_trajectory(p1_x, p1_y, p1_z, p2_x, p2_y, p2_z, "Particle 1", "Particle 
 # plt.plot(time, p1_z_time_dependent_RK4, '-.', label = "RK4; Time-dependent E field")
 # plt.legend()
 # plt.show()
+
+frac_f1 = readfile("data/fraction_f_0.1_500us.txt")
+frac_f2 = readfile("data/fraction_f_0.4_500us.txt")
+frac_f3 = readfile("data/fraction_f_0.7_500us.txt")
+frequency = []
+with open("data/fraction_f_0.1_500us.txt", 'r') as f:
+    for line in f:
+        frequency.append(float(line.split()[1]))
+
+plt.figure()
+plt.plot(frequency, frac_f1, label = "$f = 0.1$")
+plt.plot(frequency, frac_f2, label = "$f = 0.4$")
+plt.plot(frequency, frac_f3, label = "$f = 0.7$")
+plt.legend()
+plt.xlabel("Frequency $\omega_V$")
+plt.ylabel("Fraction trapped")
+plt.savefig("figs/fraction_frequency_plot.pdf")
+
+frac_f1 = readfile("data/fraction_f_0.1_500us_dw_0.005.txt")
+frac_f2 = readfile("data/fraction_f_0.4_500us_dw_0.005.txt")
+frac_f3 = readfile("data/fraction_f_0.7_500us_dw_0.005.txt")
+frequency = []
+with open("data/fraction_f_0.1_500us_dw_0.005.txt", 'r') as f:
+    for line in f:
+        frequency.append(float(line.split()[1]))
+
+plt.figure()
+plt.plot(frequency, frac_f1, label = "$f = 0.1$")
+plt.plot(frequency, frac_f2, label = "$f = 0.4$")
+plt.plot(frequency, frac_f3, label = "$f = 0.7$")
+plt.legend()
+plt.xlabel("Frequency $\omega_V$")
+plt.ylabel("Fraction trapped")
+plt.savefig("figs/fraction_frequency_plot_close_up.pdf")
+
