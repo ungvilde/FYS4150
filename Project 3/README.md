@@ -7,12 +7,14 @@ The repository contains the following files and folders:
 - **simulate_time_dependence**: Run experiments with time-varying electric field
 - **plot.py**: plots the relevant figures
 - **plot_functions.py**: holds the functions used for plotting
-- **data**: where data files from numerical experiments are stored
-- **figs**: where we have the plots
+- **data/**: where data files from numerical experiments are stored
+- **figs/**: where we have the plots
 
-To compile and run the C++ programs, run
+To compile and run the C++ programs, do
 
 > `` make all``
+
+Note that the simulations will take some time to complete, approximately 1-1.5h for all the numerical experiments.
 
 ## Particle and PenningTrap classes
 
