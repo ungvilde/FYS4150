@@ -11,5 +11,9 @@ The repository contains the following files and folders:
 - **figs**: where we have the plots
 
 To compile and run the C++ programs, run
-> make all
 
+> `` make all``
+
+## Particle and PenningTrap classes
+
+The simulation is based on two classes: ``Particle`` and ``PenningTrap``. A ``Particle`` object holds the mass, charge, velocity and position of the particle, as well as methods for updating the position and velocity of the particle. A ``PenningTrap`` has a given configuration for the magnetic and electric fields, and it holds particles. Particles can be added and counted. There are also methods for updating the velocities and positions of the particles with one time step. The methods implemented are 4th-order Runge-Kutta and the Euler-Cromer method.
