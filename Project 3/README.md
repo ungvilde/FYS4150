@@ -1,6 +1,7 @@
 # Simulating particles in a Penning trap
 
-We simulate the movement of particles in a Penning trap. 
+We simulate the movement of particles in a Penning trap.
+
 The repository contains the following files and folders:
 
 - **simulate_one_two_particles.cpp**: Run experiments for single particle and two particles in Penning trap
