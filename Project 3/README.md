@@ -1,17 +1,15 @@
-# Project 3
+# Simulating particles in a Penning trap
 
-build test with Mac Silicone: 
-> CPATH=/opt/homebrew/include LIBRARY_PATH=/opt/homebrew/lib g++ test_FE_RK4_single_particle.cpp -std=c++11 -larmadillo src/*.cpp -I include -o test.exe
+We simulate the movement of particles in a Penning trap. 
+The repository contains the following files and folders:
 
-build test:
-> g++ test_FE_RK4_single_particle.cpp -std=c++11 -larmadillo src/*.cpp -I include -o test.exe
+- **simulate_one_two_particles.cpp**: Run experiments for single particle and two particles in Penning trap
+- **simulate_time_dependence**: Run experiments with time-varying electric field
+- **plot.py**: plots the relevant figures
+- **plot_functions.py**: holds the functions used for plotting
+- **data**: where data files from numerical experiments are stored
+- **figs**: where we have the plots
 
-run:
-> ./test.exe
+To compile and run the C++ programs, run
+> make all
 
-Idea:
-- Make functions for all the different simulations/experiments, main.cpp is where we can run each experiment
-- Save relevant values from each experiment
-- Plot in python, where we define functions for different plot types, i.e plot_phase_space(position, velocity)
-
-CPATH=/opt/homebrew/include LIBRARY_PATH=/opt/homebrew/lib g++ simulate_two_particles.cpp -std=c++11 -larmadillo src/*.cpp -I include -o simulate.exe

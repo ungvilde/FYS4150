@@ -97,16 +97,16 @@ plot_xyz_trajectory(p1_x, p1_y, p1_z, p2_x, p2_y, p2_z, "Particle 1", "Particle 
 
 # plot fraction of particles trapped
 # should make function for this...
-frac_f1 = readfile("data/fraction_interaction_0_dw_0.02_f_0.1_tot_time_500.txt")
-frac_f2 = readfile("data/fraction_interaction_0_dw_0.02_f_0.4_tot_time_500.txt")
-frac_f3 = readfile("data/fraction_interaction_0_dw_0.02_f_0.7_tot_time_500.txt")
+frac_f1 = readfile("data/fraction_interaction_0_dw_0.02_f_0.1_tot_time_500_2.txt")
+frac_f2 = readfile("data/fraction_interaction_0_dw_0.02_f_0.4_tot_time_500_2.txt")
+frac_f3 = readfile("data/fraction_interaction_0_dw_0.02_f_0.7_tot_time_500_2.txt")
 frequency = []
-with open("data/fraction_interaction_0_dw_0.02_f_0.1_tot_time_500.txt", 'r') as f:
+with open("data/fraction_interaction_0_dw_0.02_f_0.1_tot_time_500_2.txt", 'r') as f:
     for line in f:
         frequency.append(float(line.split()[1]))
 
 plot_frequency_fraction(frequency, [frac_f1, frac_f2, frac_f3],
-labels_list=["$f=0.1$", "$f=0.4$", "$f=0.7$"], title="No interaction")
+labels_list=["$f=0.1$", "$f=0.4$", "$f=0.7$"], title="No interaction (Second version)")
 
 # plt.figure()
 # plt.plot(frequency, frac_f1, label = "$f = 0.1$")
@@ -158,13 +158,54 @@ plt.close()
 #plot_xyz_trajectory(x[:600], y[:600], z[:600], x1[:600], y1[:600], z1[:600], 
 #"With interaction, $T=15 \mu s$", "No interaction, $T=20 \mu s$", "$\omega_V=1.5, f = 0.7$", save=True)
 
-frac_0 = readfile("data/fraction_interaction_0_dw_0.005_f_0.1_tot_time_500.txt")
-frac_1 = readfile("data/fraction_interaction_1_dw_0.005_f_0.1_tot_time_500.txt")
+frac_0 = readfile("data/fraction_interaction_0_dw_0.005_f_0.1_tot_time_500_2.txt")
+frac_1 = readfile("data/fraction_interaction_1_dw_0.005_f_0.1_tot_time_500_2.txt")
 frequency = []
-with open("data/fraction_interaction_0_dw_0.005_f_0.1_tot_time_500.txt", 'r') as f:
+with open("data/fraction_interaction_0_dw_0.005_f_0.1_tot_time_500_2.txt", 'r') as f:
     for line in f:
         frequency.append(float(line.split()[1]))
 
 plot_frequency_fraction(
     frequency, [frac_0, frac_1], 
-    labels_list=["No interaction", "With interaction"], title="$f = 0.1$")
+    labels_list=["No interaction", "With interaction"], title="$f = 0.1$ (Second version)")
+
+frequency = []
+with open("data/fraction_interaction_0_dw_0.005_f_0.1_tot_time_500_0.txt", 'r') as f:
+    for line in f:
+        frequency.append(float(line.split()[1]))
+mean_frac_0 = np.zeros_like(frequency)
+mean_frac_1 = np.zeros_like(frequency)
+
+for k in range(5):
+    frac_0 = readfile(f"data/fraction_interaction_0_dw_0.005_f_0.1_tot_time_500_{k}.txt")
+    frac_1 = readfile(f"data/fraction_interaction_1_dw_0.005_f_0.1_tot_time_500_{k}.txt") 
+    
+    mean_frac_0 += frac_0
+    mean_frac_1 += frac_1
+
+
+plot_frequency_fraction(
+    frequency, [1/5*mean_frac_0, 1/5*mean_frac_1], 
+    labels_list=["No interaction", "With interaction"], title="$f = 0.1$ (Second version)")
+
+
+
+
+frequency = []
+with open("data/fraction_2.1_2.3__interaction_0_dw_0.005_f_0.1_tot_time_500_0.txt", 'r') as f:
+    for line in f:
+        frequency.append(float(line.split()[1]))
+mean_frac_0 = np.zeros_like(frequency)
+mean_frac_1 = np.zeros_like(frequency)
+
+for k in range(5):
+    frac_0 = readfile(f"data/fraction_2.1_2.3__interaction_0_dw_0.005_f_0.1_tot_time_500_{k}.txt")
+    frac_1 = readfile(f"data/fraction_2.1_2.3__interaction_1_dw_0.005_f_0.1_tot_time_500_{k}.txt") 
+    
+    mean_frac_0 += frac_0
+    mean_frac_1 += frac_1
+
+
+plot_frequency_fraction(
+    frequency, [1/5*mean_frac_0, 1/5*mean_frac_1], 
+    labels_list=["No interaction", "With interaction"], title="$f = 0.1$ (Different region)")

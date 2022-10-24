@@ -68,7 +68,8 @@ def plot_phase_space(x1, v1, x2, v2, label1, label2, title1, title2, xlab, ylab,
     #plt.title(title1 + " " + title2)
     plt.legend(loc=4)
     plt.xlabel(xlab + " ($\mu$m)")
-    plt.ylabel(ylab + "  (m/s)")
+    plt.ylabel(ylab + "  ($\mu$m/$\mu$s)")
+    plt.axis('equal')
     plt.tight_layout()
     if save:
         plt.savefig(f"figs/phase_space_{label1}_{label2}_{title1}+{xlab}.pdf")

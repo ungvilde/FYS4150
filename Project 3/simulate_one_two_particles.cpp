@@ -3,12 +3,16 @@
 #include <sstream>
 #include <cmath>
 
-
 #include "Particle.hpp"
 #include "PenningTrap.hpp"
 
+// run experiment with two particles in penning trap
 void two_particle_experiment(PenningTrap penning_trap, Particle p1, Particle p2, bool are_interacting, double dt, double tot_time);
+
+// run experiment with single particle in penning trap
 void single_particle_experiment(PenningTrap penning_trap, Particle p, int N_steps, double tot_time, std::string evolve_method);
+
+// compute specific analytic solution for single particle
 arma::vec single_particle_analytic_solution(double time, arma::vec v0, arma::vec r0);
 
 int main()
@@ -33,6 +37,7 @@ int main()
 
     two_particle_experiment(penning_trap, p1, p2, true, 0.001, 50);
     two_particle_experiment(penning_trap, p1, p2, false, 0.001, 50);
+
     single_particle_experiment(penning_trap, p1, 4000, 50, "FE");
     single_particle_experiment(penning_trap, p1, 8000, 50, "FE");
     single_particle_experiment(penning_trap, p1, 16000, 50, "FE");
@@ -93,18 +98,22 @@ void two_particle_experiment(PenningTrap penning_trap, Particle p1, Particle p2,
         // p1 values
         arma::vec r = penning_trap.p[0].position();
         arma::vec v = penning_trap.p[0].velocity();
+        
         x_vals_p1(i) = r(0);
         y_vals_p1(i) = r(1);
         z_vals_p1(i) = r(2);
+
         v_x_vals_p1(i) = v(0);
         v_z_vals_p1(i) = v(2);
 
         // p2 values
         r = penning_trap.p[1].position();
         v = penning_trap.p[1].velocity();
+
         x_vals_p2(i) = r(0);
         y_vals_p2(i) = r(1);
         z_vals_p2(i) = r(2);
+        
         v_x_vals_p2(i) = v(0);
         v_z_vals_p2(i) = v(2);
     }

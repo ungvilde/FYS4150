@@ -23,6 +23,7 @@ void run_resonance_experiment(
     double w_V_stop, 
     double dw_V, 
     std::string evolve_method,
+    int k, // iteration of experiment
     double B0 = 9.65 * 10,
     double V0 = 2.41 * 1000000,
     double d = 500
@@ -32,7 +33,6 @@ int main()
 {
     arma::arma_rng::set_seed(2022);
 
-    bool are_interacting = false;
     int n = 100;
     double tot_time = 500;
     double dt = 0.05;
@@ -42,59 +42,64 @@ int main()
     double w_V_stop = 2.5;
     double dw_V = 0.02;
 
-    // // test varying amplitude and frequencies
-    // double f = 0.1;
-    // run_resonance_experiment(f, are_interacting, n,tot_time, dt, w_V_start, w_V_stop, dw_V,"RK4");
+    // broad search, test varying amplitude and frequencies
+    bool are_interacting = false;
+    double f = 0.1;
+    run_resonance_experiment(f, are_interacting, n,tot_time, dt, w_V_start, w_V_stop, dw_V, "RK4", 0);
 
-    // f = 0.4;
-    // run_resonance_experiment(f, are_interacting, n,tot_time, dt, w_V_start, w_V_stop, dw_V,"RK4");
+    f = 0.4;
+    run_resonance_experiment(f, are_interacting, n,tot_time, dt, w_V_start, w_V_stop, dw_V, "RK4", 0);
 
-    // f = 0.7;
-    // run_resonance_experiment(f, are_interacting, n,tot_time, dt, w_V_start, w_V_stop, dw_V,"RK4");
+    f = 0.7;
+    run_resonance_experiment(f, are_interacting, n,tot_time, dt, w_V_start, w_V_stop, dw_V, "RK4", 0);
 
-    // // close-grained search of frequencies for comparing with and without Coloumb interaction
-    // w_V_start = 1.3;
-    // w_V_stop = 1.5;
-    // dw_V = 0.005;
-    // f = 0.1;
-    // are_interacting = true;
-    // std::cout << "Simulating 100 particles with interaction." << std::endl;
-    // clock_t t1 = clock();
-    // run_resonance_experiment(f, are_interacting, n, tot_time, dt, w_V_start, w_V_stop, dw_V, "RK4");
-    // clock_t t2 = clock();
-    // double duration_seconds = ((double) (t2 - t1)) / CLOCKS_PER_SEC;
-    // std::cout << "First simulation over in " << duration_seconds << " seconds." << std::endl;
-
-    // are_interacting = false;
-    // run_resonance_experiment(f, are_interacting, n, tot_time, dt, w_V_start, w_V_stop, dw_V, "RK4");
-
-    // get position of a particle with and without interaction
-    double w_V = 1.5;
-    double f = 0.7;
+    // close-grained search of frequencies for comparing with and without Coloumb interaction
+    w_V_start = 1.3;
+    w_V_stop = 1.5;
+    //w_V_start = 2.1;
+    //w_V_stop = 2.3;
+    dw_V = 0.005;
+    f = 0.1;
+    for(int k=0; k<5; k++)
+    {
     are_interacting = true;
-    PenningTrap penning_trap(9.65 * 10, 2.41 * 1000000, 500);
-    double q = 1;
-    double m = 40.078; // atomic mass of Ca+ ion
-    arma::vec r = arma::vec("20. 0. 20.");
-    arma::vec v = arma::vec("0. 25. 0.");
-    Particle p(q, m, r, v);
-    penning_trap.add_particle(p);
-    n = 99;
-    std::vector<double> results;
-
-    std::cout << "simulating with interaction" << std::endl;
+    std::cout << "Simulating 100 particles with interaction." << std::endl;
     clock_t t1 = clock();
-    simulate_n_particles(results, penning_trap, n, tot_time, dt, f, w_V, "RK4", are_interacting, true);
+    run_resonance_experiment(f, are_interacting, n, tot_time, dt, w_V_start, w_V_stop, dw_V, "RK4", k);
     clock_t t2 = clock();
     double duration_seconds = ((double) (t2 - t1)) / CLOCKS_PER_SEC;
     std::cout << "Simulation over in " << duration_seconds << " seconds." << std::endl;
 
     are_interacting = false;
-    std::cout << "simulating without interaction" << std::endl;
-    t1 = clock();
-    simulate_n_particles(results, penning_trap, n, tot_time, dt, f, w_V, "RK4", are_interacting, true);
-    duration_seconds = ((double) (t2 - t1)) / CLOCKS_PER_SEC;
-    std::cout << "Simulation over in " << duration_seconds << " seconds." << std::endl;
+    run_resonance_experiment(f, are_interacting, n, tot_time, dt, w_V_start, w_V_stop, dw_V, "RK4", k);
+    }
+    // // get position of a particle with and without interaction
+    // double w_V = 1.5;
+    // double f = 0.7;
+    // are_interacting = true;
+    // PenningTrap penning_trap(9.65 * 10, 2.41 * 1000000, 500);
+    // double q = 1;
+    // double m = 40.078; // atomic mass of Ca+ ion
+    // arma::vec r = arma::vec(3).randn() * 0.1 * 500.;
+    // arma::vec v = arma::vec(3).randn() * 0.1 * 500.;
+    // Particle p(q, m, r, v);
+    // penning_trap.add_particle(p);
+    // n = 99;
+    // std::vector<double> results;
+
+    // std::cout << "simulating with interaction" << std::endl;
+    // clock_t t1 = clock();
+    // simulate_n_particles(results, penning_trap, n, tot_time, dt, f, w_V, "RK4", are_interacting, true);
+    // clock_t t2 = clock();
+    // double duration_seconds = ((double) (t2 - t1)) / CLOCKS_PER_SEC;
+    // std::cout << "Simulation over in " << duration_seconds << " seconds." << std::endl;
+
+    // are_interacting = false;
+    // std::cout << "simulating without interaction" << std::endl;
+    // t1 = clock();
+    // simulate_n_particles(results, penning_trap, n, tot_time, dt, f, w_V, "RK4", are_interacting, true);
+    // duration_seconds = ((double) (t2 - t1)) / CLOCKS_PER_SEC;
+    // std::cout << "Simulation over in " << duration_seconds << " seconds." << std::endl;
 
     return 0;
 }
@@ -178,6 +183,7 @@ void run_resonance_experiment(
     double w_V_stop, 
     double dw_V, 
     std::string evolve_method,
+    int k,
     double B0,
     double V0,
     double d
@@ -189,10 +195,10 @@ void run_resonance_experiment(
     std::vector<double> results;
 
     std::ostringstream oss;
-    oss << "_interaction_" << are_interacting << "_dw_" << dw_V << "_f_" << f << "_tot_time_" << tot_time;
+    oss << "_interaction_" << are_interacting << "_dw_" << dw_V << "_f_" << f << "_tot_time_" << tot_time << "_" << k;
     std::string experiment_info = oss.str();
 
-    std::string filename = "data/fraction" + experiment_info + ".txt";
+    std::string filename = "data/fraction_2.1_2.3_" + experiment_info + ".txt";
     std::ofstream ofile;
     ofile.open(filename);
     int width = 15;
