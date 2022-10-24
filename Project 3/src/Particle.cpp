@@ -47,9 +47,3 @@ void Particle::update_position(arma::vec r_update)
 {
     r = r_update;
 }
-
-// // Method that returns a string with info
-// std::string Particle::info()
-// {
-//   std::string info_string = "q = " + std::to_string(q) + ", m = " + std::to_string(m); 
-// }

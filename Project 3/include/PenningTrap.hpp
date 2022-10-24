@@ -7,7 +7,7 @@
 #include <vector>
 #include <armadillo>
 #include <cmath>
-#include <Particle.hpp>  // Some of the declarations below need the Particle type
+#include <Particle.hpp> 
 
 
 class PenningTrap
@@ -22,8 +22,8 @@ class PenningTrap
     double k_e = 1.38935333 * 100000; // Coloumb constant
     std::vector<Particle> p; // particles in the Penning trap
     bool are_interacting=true; // if there is interaction between particles in Penning trap; true by default
-    double freq;
-    double amplitude;
+    double freq; // angular frequency of time-dependent electric field
+    double amplitude; // amplitude  of time-dependent electric field
 
     // Constructor
     PenningTrap(double B0_in, double V0_in, double d_in);
@@ -31,7 +31,7 @@ class PenningTrap
     // Add a particle to the trap
     void add_particle(Particle p_in);
 
-    // Add n randomly initialised particles to the trap
+    // Add n randomly initialised Ca+ particles to the trap
     void add_particle(int n_particles);
     
     // Determine if particles interact in penning trap or not

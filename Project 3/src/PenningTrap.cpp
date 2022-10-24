@@ -24,14 +24,14 @@ void PenningTrap::add_particle(Particle p_in)
     PenningTrap::p.push_back(p_in);
 }
 
-// Add n randomly initialised particles to the trap
+// Add n randomly initialised Ca+ particles to the trap
 void PenningTrap::add_particle(int n_particles)
 {
     for(int i=0; i<n_particles; i++)
     {
         arma::vec r = arma::vec(3).randn() *0.1* d;  
         arma::vec v = arma::vec(3).randn() *0.1* d;
-        Particle p(1, 40.078, r, v); // m and q should maybe not be hardcoded?
+        Particle p(1, 40.078, r, v);
         add_particle(p);
     }   
 }
@@ -42,7 +42,7 @@ void PenningTrap::particle_interaction(bool are_interacting)
     PenningTrap::are_interacting = are_interacting;
 }
 
-// count number of particles in Penning trap at a given time
+// count number of particles in Penning trap
 int PenningTrap::num_particles_in_trap()
 {
     int N = p.size(); // Num particles added to trap
@@ -66,7 +66,7 @@ arma::vec PenningTrap::external_E_field(arma::vec r)
     arma::vec E = arma::vec(3, arma::fill::zeros);
     if(arma::norm(r) > d)
     {
-        // E field is zero outside trap
+        // No E field outside trap
     } else
     {
         // computed as gradient of - V = -V0 / (2*d**2) * (2z**2 - x**2 - y**2)
@@ -75,7 +75,7 @@ arma::vec PenningTrap::external_E_field(arma::vec r)
         E(2) = 4.*r(2);
     }
 
-    return -V0/(2*d*d)* E; //electric field from electrodes
+    return -V0/(2*d*d)* E; //E field from electrodes
 }
 
 // External electric field at point r=(x,y,z) with time dependence
@@ -113,6 +113,7 @@ arma::vec PenningTrap::external_B_field(arma::vec r)
     return B;
 } 
 
+// compute time-dependent voltage
 double PenningTrap::time_dependent_V(double time)
 {
     return V0*(1 + amplitude*cos(freq*time));
@@ -180,7 +181,7 @@ arma::vec PenningTrap::total_force_particles(int i)
         {
             continue;
         } 
-        F += force_particle(i, j);
+        F += force_particle(i, j); // force on particle i from particle j
     }
     return F;
 }
@@ -190,13 +191,13 @@ arma::vec PenningTrap::total_force(int i)
 {
     arma::vec F_external = total_force_external(i);
     arma::vec F;
-    if(are_interacting)
+    if(are_interacting) // check if there is interaction or not
     {
         arma::vec F_other_particles = total_force_particles(i);
         F = F_external + F_other_particles;
     } else
     {
-        F = F_external;   
+        F = F_external; // only external fields act on particle if no interaction between particles
     }
 
     return F;
@@ -242,7 +243,7 @@ void PenningTrap::evolve_RK4(double dt)
     {
         arma::vec v = p_init.at(i).velocity();
         arma::vec r = p_init.at(i).position();
-        p.at(i).update_position(r + 0.5*k_r1.at(i));
+        p.at(i).update_position(r + 0.5*k_r1.at(i)); // update time and position with k1 value
         p.at(i).update_velocity(v + 0.5*k_v1.at(i));
     }
 
@@ -263,7 +264,7 @@ void PenningTrap::evolve_RK4(double dt)
     {
         arma::vec v = p_init.at(i).velocity();
         arma::vec r = p_init.at(i).position();
-        p.at(i).update_position(r + 0.5*k_r2.at(i));
+        p.at(i).update_position(r + 0.5*k_r2.at(i)); // update time and position with k2 value
         p.at(i).update_velocity(v + 0.5*k_v2.at(i));
     }
 
@@ -276,15 +277,15 @@ void PenningTrap::evolve_RK4(double dt)
         arma::vec v = p.at(i).velocity();
         double m = p.at(i).mass();
         arma::vec F = total_force(i);
-        k_v3.at(i) = dt * F / m;
-        k_r3.at(i) = dt * v; // Euler-Cromer update
+        k_v3.at(i) = dt * F / m; 
+        k_r3.at(i) = dt * v; 
     }
 
     for(int i=0; i<N; i++)
     {
         arma::vec v = p_init.at(i).velocity();
         arma::vec r = p_init.at(i).position();
-        p.at(i).update_position(r + k_r3.at(i));
+        p.at(i).update_position(r + k_r3.at(i)); // update time and position with k3 value
         p.at(i).update_velocity(v + k_v3.at(i));
     }
 
@@ -298,7 +299,7 @@ void PenningTrap::evolve_RK4(double dt)
         double m = p.at(i).mass();
         arma::vec F = total_force(i);
         k_v4.at(i) = dt * F / m; 
-        k_r4.at(i) = dt * v; // Euler-Cromer update
+        k_r4.at(i) = dt * v; 
     }
 
     // do final update of position and velocity
@@ -307,9 +308,11 @@ void PenningTrap::evolve_RK4(double dt)
         arma::vec v = p_init.at(i).velocity();
         arma::vec r = p_init.at(i).position();
 
+        // Simsons rule
         arma::vec v_update = v + 1./6*(k_v1.at(i) + 2.*k_v2.at(i) + 2.*k_v3.at(i) + k_v4.at(i));
         arma::vec r_update = r + 1./6*(k_r1.at(i) + 2.*k_r2.at(i) + 2.*k_r3.at(i) + k_r4.at(i));
 
+        // final update
         p.at(i).update_position(r_update);
         p.at(i).update_velocity(v_update);
     }
@@ -374,7 +377,7 @@ void PenningTrap::evolve_RK4(double dt, double time)
         double m = p.at(i).mass();
         arma::vec F = total_force(i, time + 0.5*dt);
         k_v3.at(i) = dt * F / m;
-        k_r3.at(i) = dt * v; // Euler-Cromer update
+        k_r3.at(i) = dt * v; 
     }
 
     for(int i=0; i<N; i++)
@@ -395,7 +398,7 @@ void PenningTrap::evolve_RK4(double dt, double time)
         double m = p.at(i).mass();
         arma::vec F = total_force(i, time + dt);
         k_v4.at(i) = dt * F / m; 
-        k_r4.at(i) = dt * v; // Euler-Cromer update
+        k_r4.at(i) = dt * v; 
     }
 
     // do final update of position and velocity

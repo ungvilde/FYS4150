@@ -7,7 +7,6 @@
 #include <armadillo>
 
 
-
 class Particle
 {
   // All public stuff
@@ -38,9 +37,6 @@ class Particle
 
     // Method that updates the position
     void update_position(arma::vec r_update);
-
-    // Method that returns a string with info about the particle
-    std::string info();
 
 };
 

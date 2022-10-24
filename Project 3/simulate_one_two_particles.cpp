@@ -35,10 +35,10 @@ int main()
     double d = 500;
     PenningTrap penning_trap(B0, V0, d);
 
-    two_particle_experiment(penning_trap, p1, p2, true, 0.001, 50);
+    two_particle_experiment(penning_trap, p1, p2, true, 0.001, 50); //dt=0.001, tot_time=50us
     two_particle_experiment(penning_trap, p1, p2, false, 0.001, 50);
 
-    single_particle_experiment(penning_trap, p1, 4000, 50, "FE");
+    single_particle_experiment(penning_trap, p1, 4000, 50, "FE"); // simulate with different num. time steps
     single_particle_experiment(penning_trap, p1, 8000, 50, "FE");
     single_particle_experiment(penning_trap, p1, 16000, 50, "FE");
     single_particle_experiment(penning_trap, p1, 32000, 50, "FE");
@@ -53,7 +53,6 @@ int main()
 
 void two_particle_experiment(PenningTrap penning_trap, Particle p1, Particle p2, bool are_interacting, double dt, double tot_time)
 {
-    // could also include option for method (FE/RK4)
     penning_trap.add_particle(p1);
     penning_trap.add_particle(p2);
     penning_trap.particle_interaction(are_interacting);
