@@ -15,6 +15,9 @@ To compile and run the C++ programs, do
 > `` make all``
 
 Note that the simulations will take some time to complete, approximately 1-1.5h for all the numerical experiments.
+To generate plots, do
+
+> ``python plot.py``
 
 ## Particle and PenningTrap classes
 
