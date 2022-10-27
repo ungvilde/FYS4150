@@ -6,3 +6,5 @@ We use the Ising model to simulate the temperature-dependent behavior in ferroma
 ### Run instructions
 
 ### Notes
+
+## Further information to describe the code structure
