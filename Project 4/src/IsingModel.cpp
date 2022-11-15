@@ -1,12 +1,11 @@
 # include "IsingModel.hpp"
 
-IsingModel::IsingModel(int lattice_size, double temperature, std::string initialise_method)
+IsingModel::IsingModel(int lattice_size, double temperature)
 {
     L = lattice_size;
     N = L*L;
     T = temperature;
     beta = 1.0 / (T*kb);
-    initialisation = initialise_method;
 }
 
 // for initialising the lattice
@@ -58,7 +57,7 @@ void IsingModel::run_MC_cycle()
 }
 
 // for running through n monte carlo cycles, storing the E, M, etc for each cycle
-arma::mat IsingModel::run_n_MC_cycles(int n_cycles, int n0)
+arma::mat IsingModel::run_n_MC_cycles(int n_cycles, int n0, std::string initialisation)
 {
     int k = 0;
     int i = 0;
@@ -116,7 +115,7 @@ double IsingModel::compute_magnetisation()
     double magnetization = 0;
     for(int i = 0; i<L; i++)
     {
-        for(int j = 0; i<L; i++)
+        for(int j = 0; j<L; j++)
         {
             magnetization += lattice(i, j);
         }

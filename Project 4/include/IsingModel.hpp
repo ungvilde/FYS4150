@@ -15,7 +15,7 @@ class IsingModel
     public:
 
         // constructor
-        IsingModel(int L, double T, std::string initialisation); 
+        IsingModel(int L, double T); 
 
         // lattice variables
         int L; // lattice size
@@ -25,19 +25,12 @@ class IsingModel
         double T; //temperature
         double beta;
         int N; // L*L
-        std::string initialisation;
 
         // measurables
         double energy; // energy of lattice
         double energy2; // squared energy
         double magnetisation; // magnetisation
         double magnetisation_abs; // magnetisation in absolute value
-
-        // // MC parameters
-        // int n_cycles; // num. MC cycles
-        // int n0; // burntime, ie num. MC cycles to run before we store the values
-
-        
 
         // for initialising the lattice
         void initialize_lattice(std::string initialisation); 
@@ -46,7 +39,7 @@ class IsingModel
         void run_MC_cycle();
 
         // for running through n monte carlo cycles, storing the E, M, etc for each cycle
-        arma::mat run_n_MC_cycles(int n_cycles, int n0); 
+        arma::mat run_n_MC_cycles(int n_cycles, int n0, std::string initialisation); 
 
         // for computing the energy of a lattice
         double compute_energy();
