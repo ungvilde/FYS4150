@@ -1,19 +1,26 @@
 # include "IsingModel.hpp"
 
-IsingModel::IsingModel(int lattice_size, double temperature)
+IsingModel::IsingModel(int lattice_size, double temperature, std::string initialise_method)
 {
     L = lattice_size;
     N = L*L;
     T = temperature;
     beta = 1.0 / (T*kb);
+    initialisation = initialise_method;
 }
 
 // for initialising the lattice
-void IsingModel::initialize_lattice()
+void IsingModel::initialize_lattice(std::string initialisation)
 {
-    std::cout << "L = " << L << std::endl;
-    lattice = arma::randi<arma::mat>(L, L, arma::distr_param(0, 1));
-    lattice = 2.0 * lattice - 1;
+    if(initialisation == "random")
+    {
+        std::cout << "L = " << L << std::endl;
+        lattice = arma::randi<arma::mat>(L, L, arma::distr_param(0, 1));
+        lattice = 2.0 * lattice - 1;
+    } else if(initialisation == "ordered")
+    {
+        lattice = arma::mat(L, L, arma::fill::ones);
+    }  
 }
 
 // for running through a single monte carly cycle
@@ -53,7 +60,7 @@ void IsingModel::run_n_MC_cycles(int n_cycles, int n0)
 {
     int k = 0;
     int i = 0;
-    initialize_lattice();
+    initialize_lattice(initialisation);
     arma::mat data = arma::mat(n_cycles - n0, 4);
 
     while(k < n_cycles)
@@ -82,10 +89,10 @@ void IsingModel::run_n_MC_cycles(int n_cycles, int n0)
 
     double energy_mean = mean(data.col(0));
     double energy2_mean = mean(data.col(1));
-    std::cout << "energy^2 = " << energy2_mean << std::endl;
     double heat_capacity = 1.0 / (kb * T*T * N) * (energy2_mean - energy_mean * energy_mean);
-    
-    std::cout << "energy = " << energy_mean << std::endl; // should eventually use save instead 
+
+    std::cout << "energy^2 = " << energy2_mean / (N*N) << std::endl;    
+    std::cout << "energy = " << energy_mean / N << std::endl; // should eventually use save instead 
     std::cout << "heat capacity = " << heat_capacity << std::endl; 
 }
 

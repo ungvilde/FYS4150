@@ -14,8 +14,8 @@ class IsingModel
     public:
 
         // constructor
-        IsingModel(int L, double T); 
-        
+        IsingModel(int L, double T, std::string initialisation); 
+
         // lattice variables
         int L; // lattice size
         arma::mat lattice; // lattice as armadillo matrix object
@@ -24,6 +24,7 @@ class IsingModel
         double T; //temperature
         double beta;
         int N; // L*L
+        std::string initialisation;
 
         // measurables
         double energy; // energy of lattice
@@ -38,7 +39,7 @@ class IsingModel
         
 
         // for initialising the lattice
-        void initialize_lattice(); 
+        void initialize_lattice(std::string initialisation); 
 
         // for running through a single monte carly cycle
         void run_MC_cycle();
