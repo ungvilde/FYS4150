@@ -1,80 +1,29 @@
-#include <random>
-#include <chrono>
-#include <iostream>
-#include <armadillo>
+#include <iostream>   
+#include <string> 
+#include <sstream>
 #include <cmath>
 
-// CPATH=/opt/homebrew/include LIBRARY_PATH=/opt/homebrew/lib g++ main.cpp -std=c++11 -larmadillo -o main
+#include "IsingModel.hpp"
 
-double compute_magnetisation(arma::mat lattice);
-double compute_energy(arma::mat lattice);
-double compute_heat_capacity(arma::mat lattice);
+
+// CPATH=/opt/homebrew/include LIBRARY_PATH=/opt/homebrew/lib g++ main.cpp -std=c++11 -larmadillo src/* -I include -o main
 
 int main()
 {
-    double J = 1.0; // coupling constant
-    double T = 1.0; // temperature
-    double kb = 1.0; // boltzmann constant
-    double beta = 1.0 / (kb * T);
-    int L = 5; // lattice length
-    int N = L*L; // num. spins
+    int L = 2;
 
-    // initialize lattice
-    // can be a function (or we could go crazy and make a class, with initialization as a method)
-    arma::mat lattice = arma::randi<arma::mat>(L, L, arma::distr_param(0, 1));
-    lattice = 2.0 * lattice - 1;
-    std::cout << "L = " << L << std::endl;
-    lattice.print("Initial lattice:");
+    IsingModel ising_model(2, 1.0);
+    ising_model.run_n_MC_cycles(50000, 1000);
 
-    // change in energy of the system, updated at each attempted spin flip
-    double dE = 0.0;
+    double Z = 2 * exp(8.0) + 12 + 2*exp(-8.0);
+    double analytic_energy = - 1.0 / Z * (2*8 * exp(8.0) - 2*8 * exp(-8.0));
+    double analytic_energy2 = 128.0 / Z * (exp(8.0) + exp(-8.0));
+    double analytic_heat_capacity = 1.0 / (L*L) * (analytic_energy2 - analytic_energy * analytic_energy);
 
-    for(int k=0; k<N; k++)
-    {
-        int i = arma::randi(arma::distr_param(0, L-1));
-        int j = arma::randi(arma::distr_param(0, L-1));
-        double energy_noflip = - J * lattice(i, j) * (
-            lattice(i, ((j - 1) % L + L) % L) +
-            lattice(i, ((j + 1) % L + L) % L) +
-            lattice(((i - 1) % L + L) % L, j) +
-            lattice(((i + 1) % L + L) % L, j)
-        );
-        
-        double energy_flip = -1 * energy_noflip;
-        double u = arma::randu(arma::distr_param(0,1));
-                
-        if(energy_flip - energy_noflip <= 0)
-        {
-            lattice(i, j) *= -1; // do the flip
-            dE += energy_flip;
-        }
-        else if(u <= exp(beta * (energy_flip - energy_noflip) ))
-        {
-            lattice(i, j) *= -1; // do the flip
-            dE += energy_flip; // update energy change in system
-        }
-    }
+    std::cout << "Analytic expected energy = " << analytic_energy << std::endl;
+    std::cout << "Analytic expected squared energy = " << analytic_energy2 << std::endl;
 
-    lattice.print("Final lattice");
+    std::cout << "Analytic expected heat capacity = " << analytic_heat_capacity << std::endl;
 
     return 0;
-}
-
-double compute_magnetisation(arma::mat lattice);
-
-double compute_energy(arma::mat lattice, double J)
-{
-    int L = lattice.n_cols;
-    double energy = 0;
-    for(int i = 0; i<L; i++)
-    {
-        for(int j = 0; i<L; i++)
-        {
-            energy += -J * lattice(i, j)*(
-                lattice(i, ((j - 1) % L + L) % L) +
-                lattice(((i + 1) % L + L) % L, j) 
-            );
-        }
-
-    }
 }
