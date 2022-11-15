@@ -6,6 +6,7 @@
 #include <iostream>
 #include <armadillo>
 #include <cmath>
+#include <stdexcept>
 
 
 class IsingModel
@@ -45,7 +46,7 @@ class IsingModel
         void run_MC_cycle();
 
         // for running through n monte carlo cycles, storing the E, M, etc for each cycle
-        void run_n_MC_cycles(int n_cycles, int n0); 
+        arma::mat run_n_MC_cycles(int n_cycles, int n0); 
 
         // for computing the energy of a lattice
         double compute_energy();

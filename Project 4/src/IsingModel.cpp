@@ -14,13 +14,15 @@ void IsingModel::initialize_lattice(std::string initialisation)
 {
     if(initialisation == "random")
     {
-        std::cout << "L = " << L << std::endl;
         lattice = arma::randi<arma::mat>(L, L, arma::distr_param(0, 1));
         lattice = 2.0 * lattice - 1;
     } else if(initialisation == "ordered")
     {
         lattice = arma::mat(L, L, arma::fill::ones);
-    }  
+    } else
+    {
+        throw std::invalid_argument( "Invalid initialisation scheme." );
+    }
 }
 
 // for running through a single monte carly cycle
@@ -56,44 +58,34 @@ void IsingModel::run_MC_cycle()
 }
 
 // for running through n monte carlo cycles, storing the E, M, etc for each cycle
-void IsingModel::run_n_MC_cycles(int n_cycles, int n0)
+arma::mat IsingModel::run_n_MC_cycles(int n_cycles, int n0)
 {
     int k = 0;
     int i = 0;
     initialize_lattice(initialisation);
-    arma::mat data = arma::mat(n_cycles - n0, 4);
+    arma::mat data = arma::mat(n_cycles - n0, 2);
 
     while(k < n_cycles)
     {
         run_MC_cycle();
         
-        if(k > n0)
+        if(k >= n0)
         {
             
             // now we store the values
             energy = compute_energy();
             magnetisation = compute_magnetisation();
 
-            //std::cout << "Energy = " << energy << std::endl;
-
             data(i, 0) = energy;
-            data(i, 1)  = energy*energy;
-            data(i, 2)  = magnetisation;
-            data(i, 3)  = abs(magnetisation);
+            data(i, 1) = magnetisation;
 
             i += 1;
         }
 
         k += 1;
     }
-
-    double energy_mean = mean(data.col(0));
-    double energy2_mean = mean(data.col(1));
-    double heat_capacity = 1.0 / (kb * T*T * N) * (energy2_mean - energy_mean * energy_mean);
-
-    std::cout << "energy^2 = " << energy2_mean / (N*N) << std::endl;    
-    std::cout << "energy = " << energy_mean / N << std::endl; // should eventually use save instead 
-    std::cout << "heat capacity = " << heat_capacity << std::endl; 
+    
+    return data;
 }
 
 // for computing the energy of a lattice
