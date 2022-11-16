@@ -64,7 +64,14 @@ int main()
     // Problem 6:
     // ----------
 
-    
+    L = 20;
+    IsingModel ising_model(L, T=1.0);
+    arma::mat data = ising_model.run_n_MC_cycles(100000, 10000, "ordered");
+    data.save("datasets/hist_data_L20_initOrdered_MC100000_T1.txt", arma::raw_ascii);
+
+    IsingModel ising_model1(L, T=2.4);
+    arma::mat data1 = ising_model1.run_n_MC_cycles(100000, 10000, "random");
+    data1.save("datasets/hist_data_L20_initRand_MC100000_T2.4.txt", arma::raw_ascii);
 
     return 0;
 }
