@@ -20,11 +20,11 @@ void IsingModel::initialize_lattice(std::string initialisation)
         lattice = arma::mat(L, L, arma::fill::ones);
     } else
     {
-        throw std::invalid_argument( "Invalid initialisation scheme." );
+        throw std::invalid_argument( "Invalid initialisation." );
     }
 }
 
-// for running through a single monte carly cycle
+// for running through a single monte carlo cycle
 void IsingModel::run_MC_cycle()
 {
     for(int k=0; k<N; k++)
@@ -43,15 +43,20 @@ void IsingModel::run_MC_cycle()
         // compute energy if spin is flipped
         double energy_flip = -1 * energy_noflip;
         double u = arma::randu(arma::distr_param(0, 1));
+        double dE = energy_flip - energy_noflip;
 
         // this is the Metropolis algorithm
-        if(energy_flip - energy_noflip <= 0)
+        if(dE <= 0)
         {
             lattice(i, j) *= -1; // do the flip
+            energy += dE;
+            magnetisation += 2*lattice(i, j);
         }
-        else if(u <= exp(- beta * (energy_flip - energy_noflip) )) // could hardcode this exp-value, there is only one case to check
+        else if(u <= exp(-beta * dE)) // could hardcode this exp-value, there are only two cases to check
         {
             lattice(i, j) *= -1; // do the flip
+            energy += dE;
+            magnetisation += 2*lattice(i, j);
         }
     }
 }
@@ -62,19 +67,22 @@ arma::mat IsingModel::run_n_MC_cycles(int n_cycles, int n0, std::string initiali
     int k = 0;
     int i = 0;
     initialize_lattice(initialisation);
+
+    // compute energy and magnetisation of initial lattice
+    // these variables are updated whenever we do a flip
+    energy = compute_energy();
+    magnetisation = compute_magnetisation();
+
+    // for storing the values    
     arma::mat data = arma::mat(n_cycles - n0, 2);
 
     while(k < n_cycles)
     {
         run_MC_cycle();
         
-        if(k >= n0)
+        if(k >= n0) //burn-in
         {
-            
-            // now we store the values
-            energy = compute_energy();
-            magnetisation = compute_magnetisation();
-
+            // here we store the values
             data(i, 0) = energy;
             data(i, 1) = magnetisation;
 
@@ -113,9 +121,9 @@ double IsingModel::compute_energy()
 double IsingModel::compute_magnetisation()
 {
     double magnetization = 0;
-    for(int i = 0; i<L; i++)
+    for(int i = 0; i < L; i++)
     {
-        for(int j = 0; j<L; j++)
+        for(int j = 0; j < L; j++)
         {
             magnetization += lattice(i, j);
         }
