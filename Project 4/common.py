@@ -16,5 +16,14 @@ def readfile(filename):
 
     return np.array(energy), np.array(magnetisation) 
 
-def heat_capacity(energy, T, L, kb=1):
+def compute_heat_capacity(energy, T, L, kb=1):
     return 1 / (L*L) * 1 / (kb * T*T) * (np.var(energy))
+
+def compute_m_abs(magnetisation, L):
+    return np.mean(np.abs(magnetisation)) / (L*L)
+
+def compute_epsilon(energy, L):
+    return np.mean(energy) / (L*L)
+
+def compute_susceptibility(magnetisation, T, L, kb=1):
+    return 1 / (L*L) * 1 / (kb * T) * np.var(np.abs(magnetisation))

@@ -5,3 +5,5 @@ Project 2/data/.DS_Store
 *.exe
 *.json
 Project 4/main
+Project 4/__pycache__/common.cpython-39.pyc
+*.pyc
