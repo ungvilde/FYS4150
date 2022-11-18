@@ -19,9 +19,11 @@
 // CPATH=/opt/homebrew/include LIBRARY_PATH=/opt/homebrew/lib g++ -O2 main.cpp -std=c++11 -larmadillo src/* -I include -o main
 
 // with parallell
-// CPATH=/opt/homebrew/include LIBRARY_PATH=/opt/homebrew/lib g++ main.cpp -std=c++11 -larmadillo src/* -I include -Xpreprocessor -fopenmp -o main
+// CPATH=/opt/homebrew/include LIBRARY_PATH=/opt/homebrew/lib g++-12 -O2 main.cpp -std=c++11 -larmadillo src/* -I include -fopenmp -o main
 
 void run_ensemble(arma::vec temperatures, int n_cycles, int n0, int L);
+void compute_2x2_analytic_solution();
+void compute_2x2_numeric_solution();
 
 int main()
 {
@@ -29,51 +31,13 @@ int main()
     // Problem 4
     // ---------
     
-    // L = 2;
-    // T = 1.0;
-    
-    // arma::arma_rng::set_seed(123);
+    // compute_2x2_analytic_solution();
+    // compute_2x2_numeric_solution();
 
-    // double Z = 2 * exp(8.0) + 12 + 2*exp(-8.0); // partition function
-    // double analytic_energy = - 1.0 / Z * (16 * exp(8.0) - 16 * exp(-8.0));
-    // double analytic_eps = analytic_energy / (L * L);
-
-    // double analytic_energy2 = 128.0 / Z * (exp(8.0) + exp(-8.0));
-    // double analytic_eps2 = analytic_energy2 / (L*L * L*L);
-
-    // double analytic_magnetisation = 8.0 / Z * (exp(8.0) + 2); //absolute value..
-    // double analytic_magnetisation2 = 32.0 / Z * (exp(8.0) + 1);
-
-    // double analytic_heat_capacity = 1.0 / (L*L) * (analytic_energy2 - analytic_energy * analytic_energy);
-    // double analytic_susceptibility = 1.0 / L * (analytic_magnetisation2 - analytic_magnetisation*analytic_magnetisation);
-
-    // std::cout << "Analytic expected energy = " << analytic_energy / (L*L) << std::endl;
-    // //std::cout << "Analytic expected squared energy = " << analytic_energy2 << std::endl;
-    // std::cout << "Analytic expected heat capacity = " << analytic_heat_capacity << std::endl;
-    // std::cout << "Analytic expected abs. magnetisation = " << analytic_magnetisation / (L*L) << std::endl;
-    // //std::cout << "Analytic expected squared magnetisation = " << analytic_magnetisation2 << std::endl;
-    // std::cout << "Analytic expected susceptibility = " << analytic_susceptibility << std::endl;
-
-    // std::cout << std::endl;
-
-    // IsingModel ising_model(L, T);
-    // clock_t t1 = clock();
-    // arma::mat data = ising_model.run_n_MC_cycles(50000, 0, "random");
-    // data.save("datasets/2x2lattice.txt", arma::raw_ascii);
-    // clock_t t2 = clock();
-
-    // std::cout << "Numeric expected energy = " << mean(data.col(0))/(L*L) << std::endl;
-    // //std::cout << "Numeric expected squared energy = " << mean( data.col(0) % data.col(0)) << std::endl;
-    // std::cout << "Numeric expected heat capacity = " << 1.0/ (L*L) * (mean( data.col(0) % data.col(0)) - mean(data.col(0))*mean(data.col(0))) << std::endl;
-    // std::cout << "Numeric expected abs. magnetisation = " << mean(abs(data.col(1)))/(L*L) << std::endl;
-    // std::cout << "Numeric expected susceptibility = " << 1.0 / L * (mean( data.col(1) % data.col(1)) - mean(abs(data.col(1)))*mean(abs(data.col(1)))) << std::endl;
-
-    // double duration_seconds = ((double) (t2 - t1)) / CLOCKS_PER_SEC;
-    // std::cout << "Simulation over in " << duration_seconds << " seconds." << std::endl;
-    
     // ----------
     // Problem 5:
     // ----------
+
     // L = 20;
     // IsingModel ising_model_T1(L, 1.0);
     // arma::mat data0 = ising_model_T1.run_n_MC_cycles(50000, 0, "random");
@@ -104,58 +68,103 @@ int main()
     // Problem 7:
     // ----------
 
-    
-    clock_t t1 = clock();
-    //run_ensemble(temperatures, 50000, 10000, 20);
+    // arma::vec temperatures = arma::linspace(1, 4, 20);
+    // run_ensemble(temperatures, 50000, 10000, 20);
 
-    arma::vec temperatures = arma::linspace(1, 2.5, 10);
-    int K = temperatures.size();
-    int n_cycles = 50000;
-    int n0 = 10000;
-
-    // here we do the parallelisation
-    #pragma omp parallel for
-    for(int k=0; k<K; k++)
-    {
-        double T = temperatures(k);
-        int L = 20;
-        IsingModel ising_model(L, T);
-        arma::mat data = ising_model.run_n_MC_cycles(n_cycles, n0, "random");
-        std::ostringstream oss;
-
-        oss << "L" << L << "initRand_MC" << n_cycles << "T" << T;
-        std::string info = oss.str();
-        std::cout << info << std::endl;
-        data.save("datasets/data_parallel_" + info + ".txt", arma::raw_ascii);
-    }
+    // ----------
+    // Problem 7:
+    // ----------
     
-    clock_t t2 = clock();
-    double duration_seconds = ((double) (t2 - t1)) / CLOCKS_PER_SEC;
-    std::cout << "Simulation over in " << duration_seconds << " seconds." << std::endl;
-    
+    // std::cout << "Search in critical range" << std::endl;
+    // arma::vec temperatures = arma::linspace(2.1, 2.4, 20);
+    // run_ensemble(temperatures, 100000, 10000, 40, "ordered");
+    // run_ensemble(temperatures, 100000, 10000, 60, "ordered");
+    // run_ensemble(temperatures, 100000, 10000, 80, "ordered");
+    // run_ensemble(temperatures, 100000, 10000, 100, "ordered");
+
+    std::cout << "General search" << std::endl;
+    arma::vec temperatures = arma::linspace(1.0, 4.0, 20);
+    //run_ensemble(temperatures, 50000, 10000, 40, "ordered");
+    //run_ensemble(temperatures, 500000, 10000, 60, "ordered");
+    std::cout << "L = " << 100 << std::endl;
+    run_ensemble(temperatures, 100000, 10000, 100);
+    // std::cout << "L = " << 20 << std::endl;
+    // run_ensemble(temperatures, 5000, 0, 20);
+
     return 0;
 }
 
 void run_ensemble(arma::vec temperatures, int n_cycles, int n0, int L)
 {
- 
-    int K = temperatures.size();
+    int K = temperatures.size(); //num. temperatures to run
 
     // here we do the parallelisation
-    // #pragma omp for
-    for(int k=0; k<K; k++)
+    #pragma omp parallel for
+    for(int k=0; k < K; k++)
     {
-        int T = temperatures(k);
-        std::cout << T << std::endl;
+        double T = temperatures(k);
 
-        IsingModel ising_model(L, T);
-        arma::mat data = ising_model.run_n_MC_cycles(n_cycles, n0, "random");
-        std::ostringstream oss;
-        oss << "L" << L << "initRand_MC" << n_cycles << "T" << T;
-        std::string info = oss.str();
-        std::cout << info << std::endl;
-        data.save("datasets/data_parallel_" + info + ".txt", arma::raw_ascii);
-    }
+        if(T < 2.4)
+        {
+            IsingModel ising_model(L, T);
 
+            // start in a certain configuration, ie all spins up
+            arma::mat data = ising_model.run_n_MC_cycles(n_cycles, n0, "ordered");
+            std::ostringstream oss;
+            oss << "_L" << L << "initOrdered_MC" << n_cycles << "_T" << T;
+            std::string info = oss.str();
+            data.save("datasets/data_parallel" + info + ".txt", arma::raw_ascii);
+        } else
+        {
+            // update model temperature
+            IsingModel ising_model(L, T);
+
+            // starts MC cycle in random config
+            arma::mat data = ising_model.run_n_MC_cycles(n_cycles, n0, "random");
+            std::ostringstream oss;
+            oss << "_L" << L << "initRand_MC" << n_cycles << "_T" << T;
+            std::string info = oss.str();
+            data.save("datasets/data_parallel" + info + ".txt", arma::raw_ascii);
+        } 
+    }  
+}
+
+void compute_2x2_analytic_solution()
+{
+    int L = 2;
+    double T = 1.0;
+    int N = L*L;
     
+    double Z = 2 * exp(8.0) + 12 + 2*exp(-8.0); // partition function
+    double analytic_energy = - 1.0 / Z * (16 * exp(8.0) - 16 * exp(-8.0));
+    double analytic_eps = analytic_energy / (L * L);
+
+    double analytic_energy2 = 128.0 / Z * (exp(8.0) + exp(-8.0));
+    double analytic_eps2 = analytic_energy2 / (L*L * L*L);
+
+    double analytic_magnetisation = 8.0 / Z * (exp(8.0) + 2); // magnetisation absolute value
+    double analytic_magnetisation2 = 32.0 / Z * (exp(8.0) + 1);
+
+    double analytic_heat_capacity = 1.0 / N * (analytic_energy2 - analytic_energy * analytic_energy);
+    double analytic_susceptibility = 1.0 / N * (analytic_magnetisation2 - analytic_magnetisation*analytic_magnetisation);
+
+    std::cout << "Analytic expected energy = " << analytic_energy / N << std::endl;
+    std::cout << "Analytic expected heat capacity = " << analytic_heat_capacity << std::endl;
+    std::cout << "Analytic expected abs. magnetisation = " << analytic_magnetisation / N << std::endl;
+    std::cout << "Analytic expected susceptibility = " << analytic_susceptibility << std::endl;
+}
+
+void compute_2x2_numeric_solution()
+{
+    int L = 2;
+    double T = 1.0;
+    int N = L*L;
+    IsingModel ising_model(L, T);
+    arma::mat data = ising_model.run_n_MC_cycles(50000, 0, "random");
+    
+    std::cout << "Numeric expected energy = " << mean(data.col(0))/N << std::endl;
+    std::cout << "Numeric expected heat capacity = " << 1.0/ N * (mean( data.col(0) % data.col(0)) - mean(data.col(0))*mean(data.col(0))) << std::endl;
+    std::cout << "Numeric expected abs. magnetisation = " << mean(abs(data.col(1)))/N << std::endl;
+    std::cout << "Numeric expected susceptibility = " << 1.0 / N * (mean( data.col(1) % data.col(1)) - mean(abs(data.col(1)))*mean(abs(data.col(1)))) << std::endl;
+
 }

@@ -36,7 +36,7 @@ class IsingModel
         // method for running through a single monte carly cycle
         void run_MC_cycle();
 
-        // method for running through n monte carlo cycles, storing the E, M, etc for each cycle
+        // method for running through n monte carlo cycles, storing the energy and magentisation for each cycle
         // n_cycles: total number of MC cycles
         // n0: determines the burn-in, ie how many iterations we run before we store the data values
         // initialisation: deterimines the configuration of the lattice and the beginning of the simulation
