@@ -1,1 +1,1 @@
-# Simulate the time-dependent Schrodinger equation
+# Simulate the time-dependent Schrödinger equation
