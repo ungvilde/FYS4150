@@ -40,7 +40,7 @@ python analytic_numeric.py
 ```
 
 ### Dependencies
-- Armadillo
+- Armadillo 11.4
 - Python 3.7
 - GNU g++ version 12 (Install with `brew install gcc@12` on OSX)
 
