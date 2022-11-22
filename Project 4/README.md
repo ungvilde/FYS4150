@@ -4,24 +4,38 @@ We use the Ising model to simulate the temperature-dependent behavior in ferroma
 ### Content list
 - `main.cpp` : main program used to run the different cases
 - `plot.py` : python script to plot the results
-- `common.py` : script for reading data files and calculating $C_V$, $|m|$, $\epsilon$ and $\chi$. 
+- `common.py` : script for reading data files and calculating $|m|$, $\epsilon$, $C_V$ and $\chi$. 
 - `src/` : folder containing the source code
 - `include/` : folder containing the header files
 - `figs/` : folder containing the figures
 - `datasets/` : folder containing the data files
 
-### Run instructions
+### Run instructions (OSX and Linux)
 
-Vildes run stuff
+Compile (OSX): 
+```sh
+g++-12 -O3 main.cpp -std=c++11 -larmadillo src/* -I include -fopenmp -o main
+```
 
-// no parallell, don't delete..
-// CPATH=/opt/homebrew/include LIBRARY_PATH=/opt/homebrew/lib g++ main.cpp -std=c++11 -larmadillo src/* -I include -o main
+Compile (Linux): 
+```sh
+g++ -O3 main.cpp -std=c++11 -larmadillo src/* -I include -fopenmp -o main
+```
 
-// try with optimisation!! much faster.
-// CPATH=/opt/homebrew/include LIBRARY_PATH=/opt/homebrew/lib g++ -O2 main.cpp -std=c++11 -larmadillo src/* -I include -o main
+Run with: 
+```sh
+./main
+```
 
-// with parallell
-// CPATH=/opt/homebrew/include LIBRARY_PATH=/opt/homebrew/lib g++-12 -O2 main.cpp -std=c++11 -larmadillo src/* -I include -fopenmp -o main
+Produce plots with: 
+```sh
+python plot.py
+```
+
+### Dependencies
+- Armadillo
+- Python 3.7
+- GNU g++ version 12 (Install with `brew install gcc@12` on OSX)
 
 
 ### Notes
