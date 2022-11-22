@@ -99,6 +99,11 @@ arma::mat IsingModel::run_n_MC_cycles(int n_cycles, int n0, std::string initiali
 
 // for computing the energy of a lattice
 double IsingModel::compute_energy()
+/*
+Only calculate the interactions between the central 
+point and the lower and right neighbours, to avoid
+double counting.
+*/
 {
     energy = 0;
     for(int i = 0; i<L; i++)
@@ -107,15 +112,11 @@ double IsingModel::compute_energy()
         {
             energy += -J * lattice(i, j)*(
                 lattice(i, ((j - 1) % L + L) % L) +
-                lattice(i, ((j + 1) % L + L) % L) +
-                lattice(((i - 1) % L + L) % L, j) +
                 lattice(((i + 1) % L + L) % L, j)
             );
         }
     }
 
-    energy = energy / 2.0; // to account for double counting 
-    
     return energy;
 }
 
