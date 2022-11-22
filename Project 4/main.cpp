@@ -10,7 +10,6 @@
 
 
 void run_ensemble(arma::vec temperatures, int n_cycles, int n0, int L);
-void compute_2x2_analytic_solution();
 void compute_2x2_numeric_solution();
 
 int main()
@@ -19,8 +18,7 @@ int main()
     // Problem 4
     // ---------
     
-    // compute_2x2_analytic_solution();
-    // compute_2x2_numeric_solution();
+    compute_2x2_numeric_solution();
 
     // ----------
     // Problem 5:
@@ -68,20 +66,20 @@ int main()
     // Problem 7:
     // ----------
     
-    std::cout << "Search in critical range" << std::endl;
-    arma::vec temperatures = arma::linspace(2.1, 2.4, 40);
-    // std::cout << temperatures << std::endl;
-    int n_cycles = 1000000;
-    int n0 = 20000;
-    
-    std::cout << "L = " << 40 << std::endl;
-    run_ensemble(temperatures, n_cycles, n0, 40);
-    std::cout << "L = " << 60 << std::endl;
-    run_ensemble(temperatures, n_cycles, n0, 60);
-    std::cout << "L = " << 80 << std::endl;
-    run_ensemble(temperatures, n_cycles, n0, 80);
-    std::cout << "L = " << 100 << std::endl;
-    run_ensemble(temperatures, n_cycles, n0, 100);
+    // std::cout << "Search in critical range" << std::endl;
+    // arma::vec temperatures = arma::linspace(2.1, 2.4, 40);
+    // // std::cout << temperatures << std::endl;
+    // int n_cycles = 1000000;
+    // int n0 = 20000;
+
+    // std::cout << "L = " << 40 << std::endl;
+    // run_ensemble(temperatures, n_cycles, n0, 40);
+    // std::cout << "L = " << 60 << std::endl;
+    // run_ensemble(temperatures, n_cycles, n0, 60);
+    // std::cout << "L = " << 80 << std::endl;
+    // run_ensemble(temperatures, n_cycles, n0, 80);
+    // std::cout << "L = " << 100 << std::endl;
+    // run_ensemble(temperatures, n_cycles, n0, 100);
 
     return 0;
 }
@@ -114,9 +112,8 @@ void compute_2x2_numeric_solution()
     double T = 1.0;
     int N = L*L;
     IsingModel ising_model(L, T);
-    int n = 500;
 
-    n = 5000;
+    int n = 5000;
     std::cout << " n = " << n <<std::endl;
     arma::mat data = ising_model.run_n_MC_cycles(n, 0, "random");
     std::cout << "Numeric expected energy = " << mean(data.col(0))/N << std::endl;
