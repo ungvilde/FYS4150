@@ -34,6 +34,11 @@ Produce plots with:
 python plot.py
 ```
 
+For benchmarking, run
+```sh
+python analytic_numeric.py
+```
+
 ### Dependencies
 - Armadillo
 - Python 3.7
