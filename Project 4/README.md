@@ -34,7 +34,7 @@ Produce plots with:
 python plot.py
 ```
 
-For benchmarking, run
+For benchmarking, run:
 ```sh
 python analytic_numeric.py
 ```
