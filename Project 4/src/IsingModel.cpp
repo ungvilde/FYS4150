@@ -86,8 +86,6 @@ arma::mat IsingModel::run_n_MC_cycles(int n_cycles, int n0, std::string initiali
             data(i, 0) = energy;
             data(i, 1) = magnetisation;
             
-            //std::cout << energy << std::endl;
-
             i += 1;
         }
 
