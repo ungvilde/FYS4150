@@ -91,7 +91,7 @@ void run_ensemble(arma::vec temperatures, int n_cycles, int n0, int L)
     int K = temperatures.size(); //num. temperatures to run
 
     // here we do the parallelisation
-    #pragma omp parallel for
+    #pragma omp parallel for // to manually set threads: num_threads(4)
     for(int k=0; k < K; k++)
     {
         double T = temperatures(k);
