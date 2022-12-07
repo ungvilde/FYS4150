@@ -46,7 +46,33 @@ void matrix_setup_v(int M, double h, int dt, mat V, cx_double r, cx_vec a, cx_ve
 // Problem 3 - Find the next u_n+1 from u_n in a time loop
 void time_loop(sp_cx_mat A, sp_cx_mat B, cx_vec u, cx_vec b, cx_vec a){
     // Missing a loop
-    b = B * u;              // Perform matrix multiplication
-    spsolve(A, u, b);       // Solve the matrix equation
+    b = B * u;                   // Perform matrix multiplication
+    spsolve(A, u_next, b);       // Solve the matrix equation for u_{n + 1}
+    
+    return u_next
 }
 
+// Problem 4 - Set up the initial state u_0ij based on the unnormalised Gaussian wave packet
+void initial_u(double x_c, double y_c, double sigma_x, double sigma_y, double p_x, double p_y){
+    // Raw function, missing input to matrix form
+    u_0 = exp(-((x - x_c)**2 / (2 * sigma_x ** 2)) - ((y - y_c)**2 / (2 * sigma_y ** 2)) + (i * p_x *(x - x_c)) + (i * p_y *(y - y_c)));
+    
+    // Normalize the initial state so the sum of all states equals 1
+
+    return u_0
+}
+
+// Problem 5 - Construct the potential matrix V with barriers for single, double and triple slits
+void construct_potential(double v0, int M, mat V){
+    thickness = 0.02;
+    x_center = 0.5;
+    y_center = 0.5;
+    slit_aperture = 0.05;
+    slit_separation_y = 0.05;
+    // How will we differentiate between number of slits?
+    for (int i = 0; i < 0.02;){
+        // Fill the columns of the matrix with v0
+    }
+}
+
+// Problem 6 - Once every function works by it self, put them together and store the values in a file

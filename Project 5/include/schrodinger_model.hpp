@@ -19,6 +19,7 @@ int index(int i, int j, int M);
 void matrix_setup(cx_double r, cx_vec a, cx_vec b, int M, sp_cx_mat A, sp_cx_mat B);
 void matrix_setup_v(int M, double h, int dt, mat V, cx_double r, cx_vec a, cx_vec b);
 void time_loop(sp_cx_mat A, sp_cx_mat B, cx_vec u, cx_vec b, cx_vec a);
+void initial_u();
 
 
 # endif
