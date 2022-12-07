@@ -15,7 +15,7 @@ g++
 
 Compile (Linux):
 ```sh
-g++
+g++ -O3 main.exe main.cpp simulate_schrodinger.cpp -std=c++14 Run: ./main.exe
 ```
 
 Run program with:
