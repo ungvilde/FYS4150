@@ -14,41 +14,31 @@ int index(int i, int j, int M) {
 // cx_vec is a complex vector
 // cx_double is a complex double
 // cx_mat is a complex matrix
-void matrix_setup(cx_double r, cx_vec a, cx_vec b, int M, sp_cx_mat A, sp_cx_mat B) {
-    // for-loop without the initial conditions taken into account
-    for (int i = 0; i <= (M - 3); i++){
-        for (int j = 0; j < (M - 2); j++){
+// & sign to store values directly
+void matrix_setup(int M, cx_double r, cx_vec a, cx_vec b, sp_cx_mat &A, sp_cx_mat &B) {
+    // Center diagonal with values from a and b
+    for (int i = 0; i <= (M - 3); i++){         // 0, 1, 2
+        for (int j = 0; j <= (M - 3); j++){     // 0, 1, 2
             A(index(i, j, M), index(i, j, M)) = a(index(i, j, M));
             B(index(i, j, M), index(i, j, M)) = b(index(i, j, M));
-            
-            /*
-            // First diagonal with r
+        }
+        // Second diagonal r
+        for (int j = 0; j <= (M - 4); j++){     // 0, 1
             A(index(i, j, M), index(i, j + 1, M)) = -r;
-            A(index(i + 1, j, M), index(i, j, M)) = -r;
+            A(index(i, j + 1, M), index(i, j, M)) = -r;
             B(index(i, j, M), index(i, j + 1, M)) = r;
+            B(index(i, j + 1, M), index(i, j, M)) = r;
+        }
+    }
+    // First diagonal r
+    for (int i = 0; i <= (M - 4); i++){         // 0, 1
+        for (int j = 0; j < (M - 2); j++){      // 0, 1, 2
+            A(index(i + 1, j, M), index(i, j, M)) = -r;
+            A(index(i, j, M), index(i + 1, j, M)) = -r;
             B(index(i + 1, j, M), index(i, j, M)) = r;
-            */
-            /*
-            // Second diagonal with r
-            A(index(i, j, M), index(i, j + 3, M)) = -r;
-            A(index(i + 3, j, M), index(i, j, M)) = -r;
-            B(index(i, j, M), index(i, j + 3, M)) = r;
-            B(index(i + 3, j, M), index(i, j, M)) = r;
-            */
+            B(index(i, j, M), index(i + 1, j, M)) = r;
         }
     }
-}
-
-void output_matrix(sp_cx_mat A, int M, string filename) {
-    ofstream outfile;
-    outfile.open(filename);
-    for (int i = 0; i <= (M - 2); i++){
-        for (int j = 0; j <= (M - 2); j++){
-            outfile << A(index(i, j, M), index(i, j, M)) << " ";
-        }
-        outfile << endl;
-    }
-    outfile.close();
 }
 
 /*
