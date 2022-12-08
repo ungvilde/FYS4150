@@ -15,7 +15,7 @@ g++
 
 Compile (Linux):
 ```sh
-g++ main.cpp src/simulate_quantum.cpp -I include -std=c++14 -larmadillo -o main
+g++ main.cpp src/simulate_schrodinger.cpp -I include -std=c++14 -larmadillo -o main
 ```
 
 Run program with:
