@@ -1,4 +1,4 @@
-#include "simulate_schrodinger.hpp"
+#include "/home/eventob/non-private-repos/FYS4150/Project 5/include/simulate_schrodinger.hpp"
 
 using namespace arma;
 using namespace std;
@@ -15,25 +15,45 @@ int index(int i, int j, int M) {
 // cx_double is a complex double
 // cx_mat is a complex matrix
 void matrix_setup(cx_double r, cx_vec a, cx_vec b, int M, sp_cx_mat A, sp_cx_mat B) {
-    for (int i = 0; i <= (M - 2);){
-        for (int j = 0; j <= (M - 2);){
-            A((i, j*(M - 2)), (i, j*(M - 2))) = a((i, j*(M - 2)));
-            B(i, j*(M - 2), (i, j*(M - 2))) = b((i, j*(M - 2)));
+    // for-loop without the initial conditions taken into account
+    for (int i = 0; i <= (M - 3); i++){
+        for (int j = 0; j < (M - 2); j++){
+            A(index(i, j, M), index(i, j, M)) = a(index(i, j, M));
+            B(index(i, j, M), index(i, j, M)) = b(index(i, j, M));
+            
+            /*
+            // First diagonal with r
+            A(index(i, j, M), index(i, j + 1, M)) = -r;
+            A(index(i + 1, j, M), index(i, j, M)) = -r;
+            B(index(i, j, M), index(i, j + 1, M)) = r;
+            B(index(i + 1, j, M), index(i, j, M)) = r;
+            */
+            /*
+            // Second diagonal with r
+            A(index(i, j, M), index(i, j + 3, M)) = -r;
+            A(index(i + 3, j, M), index(i, j, M)) = -r;
+            B(index(i, j, M), index(i, j + 3, M)) = r;
+            B(index(i + 3, j, M), index(i, j, M)) = r;
+            */
         }
-        for (int j = 0; j <= (M - 2);){
-            A((i, j*(M - 2)), (i, j*(M - 2))) = -r;
-            B((i, j*(M - 2)), (i, j*(M - 2))) = r;
-
-            A((i, (j - 1)*(M - 2)), (i, j*(M - 2))) = -r;
-            B((i, j*(M - 2)), (i, (j - 1)*(M - 2))) = r;
-        }
-
     }
-
 }
 
+void output_matrix(sp_cx_mat A, int M, string filename) {
+    ofstream outfile;
+    outfile.open(filename);
+    for (int i = 0; i <= (M - 2); i++){
+        for (int j = 0; j <= (M - 2); j++){
+            outfile << A(index(i, j, M), index(i, j, M)) << " ";
+        }
+        outfile << endl;
+    }
+    outfile.close();
+}
+
+/*
 // Problem 2 - fill two matrices with inputs M, h, dt, V, r, a, b
-void matrix_setup_v(int M, double h, int dt, mat V, cx_double r, cx_vec a, cx_vec b){
+void ab_vector_setup(int M, double h, int dt, mat V, cx_double r, cx_vec a, cx_vec b){
     cx_double c = cx_double(dt / 2.);   // Correct implementation of value?
     for (int i = 0; i <= (M - 2);){
         for (int j = 0; j <=(M - 2);){
@@ -43,23 +63,24 @@ void matrix_setup_v(int M, double h, int dt, mat V, cx_double r, cx_vec a, cx_ve
     }
 }
 
+
 // Problem 3 - Find the next u_n+1 from u_n in a time loop
-void time_loop(sp_cx_mat A, sp_cx_mat B, cx_vec u, cx_vec b, cx_vec a){
+void solve_unext(sp_cx_mat A, sp_cx_mat B, cx_vec u, cx_vec b, cx_vec a){
     // Missing a loop
     b = B * u;                   // Perform matrix multiplication
     spsolve(A, u_next, b);       // Solve the matrix equation for u_{n + 1}
     
-    return u_next
+    return u_next;
 }
 
 // Problem 4 - Set up the initial state u_0ij based on the unnormalised Gaussian wave packet
-void initial_u(double x_c, double y_c, double sigma_x, double sigma_y, double p_x, double p_y){
+void initialize_u(double x_c, double y_c, double sigma_x, double sigma_y, double p_x, double p_y){
     // Raw function, missing input to matrix form
     u_0 = exp(-((x - x_c)**2 / (2 * sigma_x ** 2)) - ((y - y_c)**2 / (2 * sigma_y ** 2)) + (i * p_x *(x - x_c)) + (i * p_y *(y - y_c)));
     
     // Normalize the initial state so the sum of all states equals 1
 
-    return u_0
+    return u_0;
 }
 
 // Problem 5 - Construct the potential matrix V with barriers for single, double and triple slits
@@ -76,3 +97,4 @@ void construct_potential(double v0, int M, mat V){
 }
 
 // Problem 6 - Once every function works by it self, put them together and store the values in a file
+*/
