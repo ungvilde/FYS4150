@@ -76,6 +76,7 @@ void solve_unext(sp_cx_mat A, sp_cx_mat B, cx_vec u, cx_vec b, cx_vec a){
 // Problem 4 - Set up the initial state u_0ij based on the unnormalised Gaussian wave packet
 void initialize_u(double x_c, double y_c, double sigma_x, double sigma_y, double p_x, double p_y){
     // Raw function, missing input to matrix form
+    // Split it into x- and y-components
     u_0 = exp(-((x - x_c)**2 / (2 * sigma_x ** 2)) - ((y - y_c)**2 / (2 * sigma_y ** 2)) + (i * p_x *(x - x_c)) + (i * p_y *(y - y_c)));
     
     // Normalize the initial state so the sum of all states equals 1
