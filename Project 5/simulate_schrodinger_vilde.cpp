@@ -12,8 +12,8 @@ arma::sp_cx_mat get_B_mat(arma::cx_vec b, arma::cx_double r);
 void matrix_AB_setup(double h, double dt, arma::cx_mat V, arma::sp_cx_mat& A, arma::sp_cx_mat& B);
 arma::cx_double gaussian_wavepacket(double x, double y, double sigma_x, double sigma_y, double p_x, double p_y, double x_c, double y_c);
 arma::cx_mat initialise_U(double h, double sigma_x, double sigma_y, double p_x, double p_y, double x_c, double y_c);
-arma::cx_mat initialise_V(double h, double v_0);
-arma::cx_cube simulate(double h, double dt, double T, double x_c, double sigma_x, double p_x, double y_c, double sigma_y, double p_y, double v_0);
+arma::cx_mat initialise_V(double h, double v_0, int num_slits);
+arma::cx_cube simulate(double h, double dt, double T, double x_c, double sigma_x, double p_x, double y_c, double sigma_y, double p_y, double v_0, int num_slits);
 
 int main(){
 
@@ -26,14 +26,14 @@ int main(){
     double p_x = 200.0;
     double p_y = 0.0;
     double T = 0.008;
-    double v_0 = 0.0;
+    double v_0 = 10.0;
+    int num_slits = 3;
+    arma::cx_cube data = simulate(h, dt, T, x_c, sigma_x, p_x, y_c, sigma_y, p_y, v_0, num_slits);
+    // data.save("data/problem7partA.bin", arma::arma_binary);
 
-    arma::cx_cube data = simulate(h, dt, T, x_c, sigma_x, p_x, y_c, sigma_y, p_y, v_0);
-    data.save("data/problem7partA.bin", arma::arma_binary);
-
-    v_0 = pow(10, 10);
-    data = simulate(h, dt, T, x_c, sigma_x, p_x, y_c, sigma_y, p_y, v_0);
-    data.save("data/problem7partB.bin", arma::arma_binary);
+    // v_0 = pow(10, 10);
+    // data = simulate(h, dt, T, x_c, sigma_x, p_x, y_c, sigma_y, p_y, v_0);
+    // data.save("data/problem7partB.bin", arma::arma_binary);
 
     return 0;
 }
@@ -173,29 +173,59 @@ arma::cx_mat initialise_U(double h, double sigma_x, double sigma_y, double p_x, 
     return U;
 }
 
-arma::cx_mat initialise_V(double h, double v_0)
+arma::cx_mat initialise_V(double h, double v_0, int num_slits)
 {
-    int M = 1/h + 1;
+    int M = 1/h + 1; // num points
+    int thickness_x = 0.02 / h;
+    int slit_sep_y = 0.05 / h;
+    int slit_aperture_y = 0.05 / h;
+    int center = 0.5 / h;
+
     arma::cx_mat V(M, M, arma::fill::zeros);
 
-    for(int i=1; i <= M-2; i++)
+    for(int i=center - thickness_x/2; i <= center + thickness_x/2; i++) // fill wall thickness in x-direction
     {
-        for(int j=1; j <= M-2; j++)
+        for(int j=0; j < M; j++)
         {
-            V(i, j) = v_0;
+            if(num_slits == 2 &&
+             j >= center - slit_sep_y/2 - slit_aperture_y && j <= center - slit_sep_y/2 || // lower slit
+             j >= center + slit_sep_y/2 && j <= center + slit_sep_y/2 + slit_aperture_y) // upper slit
+            {
+                // continue
+            }
+            if(num_slits == 1 &&
+             j >= center - slit_aperture_y/2 && j <= center + slit_aperture_y/2) // single slit
+            {
+                // continue
+            }
+            if(num_slits == 3 &&
+             j >= center - slit_aperture_y/2 && j <= center + slit_aperture_y/2 || // mid slit
+             j >= center + slit_sep_y + slit_aperture_y/2 && j <= center + slit_sep_y + slit_aperture_y/2 + slit_aperture_y || // upper slit
+             j <= center - slit_sep_y - slit_aperture_y/2 && j >= center - slit_sep_y - slit_aperture_y/2 - slit_aperture_y // lower slit
+             )
+            {
+                // continue
+            }
+            else
+            {
+                V(j, i) = v_0; // set potential
+            }
         }
     }
 
     return V;
 }
 
-arma::cx_cube simulate(double h, double dt, double T, double x_c, double sigma_x, double p_x, double y_c, double sigma_y, double p_y, double v_0)
+arma::cx_cube simulate(double h, double dt, double T, double x_c, double sigma_x, double p_x, double y_c, double sigma_y, double p_y, double v_0, int num_slits)
 {
     
     int N_timesteps = T / dt; // num. timesteps
     int M = 1/h + 1; // num. points
     arma::cx_cube data(M-2, M-2, N_timesteps); // we save each U_n as slice in cube
-    arma::cx_mat V = initialise_V(h, v_0); 
+    arma::cx_mat V = initialise_V(h, v_0, num_slits); 
+
+    V.save("potential.bin", arma::arma_binary);
+
     arma::cx_mat U = initialise_U(h, sigma_x, sigma_y, p_x, p_y, x_c, y_c);
     arma::sp_cx_mat A;
     arma::sp_cx_mat B;
