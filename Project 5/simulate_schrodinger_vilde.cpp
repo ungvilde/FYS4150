@@ -26,14 +26,17 @@ int main(){
     double p_x = 200.0;
     double p_y = 0.0;
     double T = 0.008;
-    double v_0 = 10.0;
-    int num_slits = 3;
-    arma::cx_cube data = simulate(h, dt, T, x_c, sigma_x, p_x, y_c, sigma_y, p_y, v_0, num_slits);
-    // data.save("data/problem7partA.bin", arma::arma_binary);
+    int num_slits = 2;
 
-    // v_0 = pow(10, 10);
-    // data = simulate(h, dt, T, x_c, sigma_x, p_x, y_c, sigma_y, p_y, v_0);
-    // data.save("data/problem7partB.bin", arma::arma_binary);
+    double v_0 = 0.0;
+
+    arma::cx_cube data = simulate(h, dt, T, x_c, sigma_x, p_x, y_c, sigma_y, p_y, v_0, num_slits);
+    data.save("data/problem7partA.bin", arma::arma_binary);
+
+    v_0 = pow(10, 10);
+    sigma_y = 0.05;
+    data = simulate(h, dt, T, x_c, sigma_x, p_x, y_c, sigma_y, p_y, v_0, num_slits);
+    data.save("data/problem7partB.bin", arma::arma_binary);
 
     return 0;
 }
@@ -140,8 +143,8 @@ arma::cx_double gaussian_wavepacket(double x, double y, double sigma_x, double s
     p_y_im.imag(p_y);
 
     return exp(
-        - (x - x_c)*(x - x_c) /(2.0 * sigma_x*sigma_x)
-        + (y - y_c)*(y - y_c) /(2.0 * sigma_y*sigma_y)
+        - (x - x_c)*(x - x_c) / (2.0 * sigma_x*sigma_x)
+        - (y - y_c)*(y - y_c) / (2.0 * sigma_y*sigma_y)
         + p_x_im * (x - x_c)
         + p_y_im * (y - y_c)
     );
@@ -208,7 +211,7 @@ arma::cx_mat initialise_V(double h, double v_0, int num_slits)
             }
             else
             {
-                V(j, i) = v_0; // set potential
+                V(i, j) = v_0; // set potential
             }
         }
     }
@@ -224,7 +227,7 @@ arma::cx_cube simulate(double h, double dt, double T, double x_c, double sigma_x
     arma::cx_cube data(M-2, M-2, N_timesteps); // we save each U_n as slice in cube
     arma::cx_mat V = initialise_V(h, v_0, num_slits); 
 
-    V.save("potential.bin", arma::arma_binary);
+    //V.save("potential.bin", arma::arma_binary); // maybe save V and plot, to include slit configs in report?
 
     arma::cx_mat U = initialise_U(h, sigma_x, sigma_y, p_x, p_y, x_c, y_c);
     arma::sp_cx_mat A;

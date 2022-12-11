@@ -10,6 +10,35 @@ def load(filename):
     data = np.array(data, dtype=np.cdouble)
     return data
 
+def plot_potential(data):
+    h = 0.005
+    x_points = np.arange(0, 1+h, h)
+    y_points = np.arange(0, 1+h, h)
+    x, y = np.meshgrid(x_points, y_points, sparse=True)
+    x_min, x_max = x_points[0], x_points[-1]
+    y_min, y_max = y_points[0], y_points[-1]
+
+    fig = plt.figure()
+    ax = plt.gca()
+
+    # Create a colour scale normalization according to the max z value in the first frame
+    norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(data[0]))
+
+    # Plot the first frame
+    img = ax.imshow(data, extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
+    # Axis labels
+    fontsize = 12
+    plt.xlabel("x", fontsize=fontsize)
+    plt.ylabel("y", fontsize=fontsize)
+    plt.xticks(fontsize=fontsize)
+    plt.yticks(fontsize=fontsize)
+
+    # Add a colourbar
+    cbar = fig.colorbar(img, ax=ax)
+    cbar.set_label("potential", fontsize=fontsize)
+    cbar.ax.tick_params(labelsize=fontsize)
+    plt.show()
+
 def animate(data, h, dt, T):
 
     # Set up a 2D xy grid
