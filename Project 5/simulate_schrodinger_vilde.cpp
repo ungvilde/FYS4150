@@ -19,22 +19,24 @@ int main(){
 
     double h = 0.005;
     double dt = 2.5 * pow(10, -5);
-    double sigma_x = 0.05;
-    double sigma_y = 0.05;
-    double x_c = 0.25;
-    double y_c = 0.5;
-    double p_x = 200.0;
-    double p_y = 0.0;
     double T = 0.008;
-    int num_slits = 2;
+
+    double x_c = 0.25;
+    double sigma_x = 0.05;
+    double p_x = 200.0;
+
+    double y_c = 0.5;
+    double sigma_y = 0.05;
+    double p_y = 0.0;
 
     double v_0 = 0.0;
+    int num_slits = 2;
 
     arma::cx_cube data = simulate(h, dt, T, x_c, sigma_x, p_x, y_c, sigma_y, p_y, v_0, num_slits);
     data.save("data/problem7partA.bin", arma::arma_binary);
 
     v_0 = pow(10, 10);
-    sigma_y = 0.05;
+    sigma_y = 0.1;
     data = simulate(h, dt, T, x_c, sigma_x, p_x, y_c, sigma_y, p_y, v_0, num_slits);
     data.save("data/problem7partB.bin", arma::arma_binary);
 
@@ -64,14 +66,14 @@ arma::sp_cx_mat get_A_mat(arma::cx_vec a, arma::cx_double r)
 {
     int N = a.n_elem; // N = (M-2)*(M-2)
     arma::sp_cx_mat A(N, N);
+    int K = sqrt(N); // M-2
 
-    A.diag(-3) -= r;
-    A.diag(3) -= r;
+    A.diag(-K) -= r;
+    A.diag(K) -= r;
     A.diag(-1) -= r;
     A.diag(1) -= r;
     A.diag(0) = a;
 
-    int K = sqrt(N); // M-2
     int i;
 
     for(int k=1; k < K; k++)
@@ -79,7 +81,7 @@ arma::sp_cx_mat get_A_mat(arma::cx_vec a, arma::cx_double r)
         i = k * K - 1; // index for submatrix
         
         A(i, i+1) = 0; // set zero where boundary cond. are 
-        A(i+1, i) = 0;
+        A(i + 1, i) = 0;
     }
     
     return A;
@@ -89,14 +91,14 @@ arma::sp_cx_mat get_B_mat(arma::cx_vec b, arma::cx_double r)
 {
     int N = b.n_elem; // N = (M-2)*(M-2)
     arma::sp_cx_mat B(N, N);
+    int K = sqrt(N); // M-2
 
     B.diag(0) = b;
     B.diag(-1) += r;
     B.diag(1) += r;
-    B.diag(-3) += r;
-    B.diag(3) += r;
+    B.diag(-K) += r;
+    B.diag(K) += r;
 
-    int K = sqrt(N); // M-2
     int i;
 
     for(int k=1; k < K; k++)
@@ -237,6 +239,7 @@ arma::cx_cube simulate(double h, double dt, double T, double x_c, double sigma_x
 
     for(int n=0; n < N_timesteps; n++) // maybe save initialisation as well
     {
+        std::cout << "n = " << n << std::endl;
         arma::cx_vec b = B * u_n;
         u_n = arma::spsolve(A, b);      
         U = arma::reshape(u_n, M-2, M-2);
