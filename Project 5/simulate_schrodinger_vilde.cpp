@@ -32,13 +32,30 @@ int main(){
     double v_0 = 0.0;
     int num_slits = 2;
 
-    arma::cx_cube data = simulate(h, dt, T, x_c, sigma_x, p_x, y_c, sigma_y, p_y, v_0, num_slits);
+    arma::cx_cube data;
+
+    data = simulate(h, dt, T, x_c, sigma_x, p_x, y_c, sigma_y, p_y, v_0, num_slits);
     data.save("data/problem7partA.bin", arma::arma_binary);
 
     v_0 = pow(10, 10);
     sigma_y = 0.1;
+    
     data = simulate(h, dt, T, x_c, sigma_x, p_x, y_c, sigma_y, p_y, v_0, num_slits);
     data.save("data/problem7partB.bin", arma::arma_binary);
+
+    T = 0.002;
+    sigma_y = 0.2;
+    
+    data = simulate(h, dt, T, x_c, sigma_x, p_x, y_c, sigma_y, p_y, v_0, num_slits);
+    data.save("data/problem8.bin", arma::arma_binary);
+
+    num_slits = 1;
+    data = simulate(h, dt, T, x_c, sigma_x, p_x, y_c, sigma_y, p_y, v_0, num_slits);
+    data.save("data/problem9_1_slit.bin", arma::arma_binary);
+
+    num_slits = 3;
+    data = simulate(h, dt, T, x_c, sigma_x, p_x, y_c, sigma_y, p_y, v_0, num_slits);
+    data.save("data/problem9_3_slits.bin", arma::arma_binary);
 
     return 0;
 }
@@ -79,8 +96,7 @@ arma::sp_cx_mat get_A_mat(arma::cx_vec a, arma::cx_double r)
     for(int k=1; k < K; k++)
     {
         i = k * K - 1; // index for submatrix
-        
-        A(i, i+1) = 0; // set zero where boundary cond. are 
+        A(i, i+1) = 0; // set zero where boundary cond. are zero
         A(i + 1, i) = 0;
     }
     
@@ -103,8 +119,8 @@ arma::sp_cx_mat get_B_mat(arma::cx_vec b, arma::cx_double r)
 
     for(int k=1; k < K; k++)
     {
-        i = k * K - 1;
-        B(i, i+1) = 0;
+        i = k * K - 1; // index for submatrix
+        B(i, i+1) = 0; // set zero where boundary cond. are zero
         B(i+1, i) = 0;
     }
 
@@ -193,23 +209,25 @@ arma::cx_mat initialise_V(double h, double v_0, int num_slits)
         for(int j=0; j < M; j++)
         {
             if(num_slits == 2 &&
-             j >= center - slit_sep_y/2 - slit_aperture_y && j <= center - slit_sep_y/2 || // lower slit
-             j >= center + slit_sep_y/2 && j <= center + slit_sep_y/2 + slit_aperture_y) // upper slit
+             (j >= center - slit_sep_y/2 - slit_aperture_y && j <= center - slit_sep_y/2 || // lower slit
+             j >= center + slit_sep_y/2 && j <= center + slit_sep_y/2 + slit_aperture_y)) // upper slit
             {
-                // continue
+                // std::cout << "2 slit barrier" << std::endl;
+                // std::cout << j << std::endl;
             }
-            if(num_slits == 1 &&
-             j >= center - slit_aperture_y/2 && j <= center + slit_aperture_y/2) // single slit
+            else if(num_slits == 1 && j >= center - slit_aperture_y/2 && j <= center + slit_aperture_y/2) // single slit
             {
-                // continue
+                // std::cout << "1 slit barrier" << std::endl;
+                // std::cout << j << std::endl;
             }
-            if(num_slits == 3 &&
-             j >= center - slit_aperture_y/2 && j <= center + slit_aperture_y/2 || // mid slit
+            else if(num_slits == 3 &&
+             (j >= center - slit_aperture_y/2 && j <= center + slit_aperture_y/2 || // mid slit
              j >= center + slit_sep_y + slit_aperture_y/2 && j <= center + slit_sep_y + slit_aperture_y/2 + slit_aperture_y || // upper slit
              j <= center - slit_sep_y - slit_aperture_y/2 && j >= center - slit_sep_y - slit_aperture_y/2 - slit_aperture_y // lower slit
-             )
+             ))
             {
-                // continue
+                // std::cout << "3 slit barrier" << std::endl;
+                // std::cout << j << std::endl;
             }
             else
             {
@@ -229,7 +247,7 @@ arma::cx_cube simulate(double h, double dt, double T, double x_c, double sigma_x
     arma::cx_cube data(M-2, M-2, N_timesteps); // we save each U_n as slice in cube
     arma::cx_mat V = initialise_V(h, v_0, num_slits); 
 
-    //V.save("potential.bin", arma::arma_binary); // maybe save V and plot, to include slit configs in report?
+    V.save("data/potential_3_slit.bin", arma::arma_binary); // maybe save V and plot, to include slit configs in report?
 
     arma::cx_mat U = initialise_U(h, sigma_x, sigma_y, p_x, p_y, x_c, y_c);
     arma::sp_cx_mat A;
@@ -237,13 +255,14 @@ arma::cx_cube simulate(double h, double dt, double T, double x_c, double sigma_x
     matrix_AB_setup(h, dt, V, A, B);
     arma::cx_vec u_n = flatten_internal(U);
 
-    for(int n=0; n < N_timesteps; n++) // maybe save initialisation as well
+    data.slice(0) = arma::reshape(u_n, M-2, M-2); // save initial state
+    
+    for(int n=1; n < N_timesteps; n++) // maybe save initialisation as well
     {
         std::cout << "n = " << n << std::endl;
         arma::cx_vec b = B * u_n;
         u_n = arma::spsolve(A, b);      
-        U = arma::reshape(u_n, M-2, M-2);
-        data.slice(n) = U;
+        data.slice(n) = arma::reshape(u_n, M-2, M-2);
     }
 
     return data;
