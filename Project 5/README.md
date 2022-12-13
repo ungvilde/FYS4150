@@ -30,13 +30,11 @@ g++ main.cpp src/* -I include -std=c++11 -larmadillo -o main; ./main
 Produce only plots with:
 ```sh
 python plot.py
-> Compile animations? (y/n): any input
 ```
 
-Produce plots and animations:
+Produce plots and animations with:
 ```sh
-python plot.py
-> Compile animations? (y/n): y
+python plot.py y
 ```
 
 ### Dependencies
