@@ -15,7 +15,8 @@ We wanted to see the quantum effects of a particle moving through two slits. Thi
 ### Run instructions (OSX and Linux)
 Compile (OSX):
 ```sh
-g++
+CPATH=/opt/homebrew/include LIBRARY_PATH=/opt/homebrew/lib g++ main.cpp src/* -I include -std=c++11 -larmadillo -o main
+???
 ```
 Run program with (OSX):
 ```sh
