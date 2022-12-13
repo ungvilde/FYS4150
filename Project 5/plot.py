@@ -1,4 +1,5 @@
 from common import *
+import sys
 
 h = 0.005
 T = 0.008
@@ -84,18 +85,18 @@ colormap(np.real(p_data[0]), fig_label="Probability", save_label="prob_T0.0")
 colormap(np.real(p_data[n]), fig_label="Probability", save_label="prob_T0.001")
 colormap(np.real(p_data[-1]), fig_label="Probability", save_label="prob_T0.002")
 
-colormap(np.real(data[0]), fig_label="Re($U^n$)", save_label="real_U_T0.0")
-colormap(np.real(data[n]), fig_label="Re($U^n$)", save_label="real_U_T0.001")
-colormap(np.real(data[-1]), fig_label="Re($U^n$)", save_label="real_U_T0.002")
+colormap(np.sqrt(abs(np.real(data[0]))), fig_label="$\sqrt{|{Re(U^n)}|}$", save_label="real_U_T0.0")
+colormap(np.sqrt(abs(np.real(data[n]))), fig_label="$\sqrt{|{Re(U^n)}|}$", save_label="real_U_T0.001")
+colormap(np.sqrt(abs(np.real(data[-1]))), fig_label="$\sqrt{|{Re(U^n)}|}$", save_label="real_U_T0.002")
 
-colormap(np.imag(data[0]), fig_label="Im($U^n$)", save_label="imag_U_T0.0")
-colormap(np.imag(data[n]), fig_label="Im($U^n$)", save_label="imag_U_T0.001")
-colormap(np.imag(data[-1]), fig_label="Im($U^n$)", save_label="imag_U_T0.002")
+colormap(np.sqrt(abs(np.imag(data[0]))), fig_label="$\sqrt{|{Im(U^n)}|}$", save_label="imag_U_T0.0")
+colormap(np.sqrt(abs(np.imag(data[n]))), fig_label="$\sqrt{|{Im(U^n)}|}$", save_label="imag_U_T0.001")
+colormap(np.sqrt(abs(np.imag(data[-1]))), fig_label="$\sqrt{|{Im(U^n)}|}$", save_label="imag_U_T0.002")
 
 # Plot probability at the detector sheet placed at x = 0.8 and animate the output
 prob_detectorsheet(data, x_idx, "figs/cond_prob_x0.8.pdf")
 if user_input == "y":
-    run_animations(p_data, label="anim/problem_9_twoslits")
+    run_animations(p_data, label="anim/problem_8")
 
 p_data, data = initalize_data("data/problem9_3_slits.bin")
 prob_detectorsheet(data, x_idx, "figs/cond_prob_x0.8_3slits.pdf")
