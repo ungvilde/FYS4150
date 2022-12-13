@@ -77,16 +77,16 @@ plt.savefig("figs/prob_error.pdf")
 
 # Plot the double slit experiment at t = 0, 0.001 and 0.002
 p_data, data = initalize_data("data/problem8.bin")
-colormap(np.real(p_data[n]), fig_label="Probability", save_label="prob_T0.001")
 colormap(np.real(p_data[0]), fig_label="Probability", save_label="prob_T0.0")
+colormap(np.real(p_data[n]), fig_label="Probability", save_label="prob_T0.001")
 colormap(np.real(p_data[-1]), fig_label="Probability", save_label="prob_T0.002")
 
-colormap(np.real(data[n]), fig_label="Re($U^n$)", save_label="real_U_T0.001")
 colormap(np.real(data[0]), fig_label="Re($U^n$)", save_label="real_U_T0.0")
+colormap(np.real(data[n]), fig_label="Re($U^n$)", save_label="real_U_T0.001")
 colormap(np.real(data[-1]), fig_label="Re($U^n$)", save_label="real_U_T0.002")
 
-colormap(np.imag(data[n]), fig_label="Im($U^n$)", save_label="imag_U_T0.001")
 colormap(np.imag(data[0]), fig_label="Im($U^n$)", save_label="imag_U_T0.0")
+colormap(np.imag(data[n]), fig_label="Im($U^n$)", save_label="imag_U_T0.001")
 colormap(np.imag(data[-1]), fig_label="Im($U^n$)", save_label="imag_U_T0.002")
 
 # Plot probability at the detector sheet placed at x = 0.8 and animate the output
