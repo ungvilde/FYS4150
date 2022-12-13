@@ -3,8 +3,8 @@
 #include <cmath>
 #include <armadillo>
 
-
 // CPATH=/opt/homebrew/include LIBRARY_PATH=/opt/homebrew/lib g++ simulate_schrodinger_vilde.cpp -std=c++11 -larmadillo -o main
+// Linux run: g++ simulate_schrodinger_vilde.cpp -std=c++11 -larmadillo -o main; ./main
 
 arma::cx_vec flatten_internal(arma::cx_mat U);
 arma::sp_cx_mat get_A_mat(arma::cx_vec a, arma::cx_double r);
