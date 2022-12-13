@@ -1,5 +1,5 @@
 # Simulate the time-dependent Schrödinger equation
-We want to see the effects of the quantum waves through one, two and three slites.
+We wanted to see the quantum effects of a particle moving through two slits. This program simulates a 1 x 1 box with dirichlet conditions at the boundary, so that the edges work as a reflective surface. Particle is represented by a probability distribution and the simulation utilizes the Born rule to see the effects. It gives the probability of one-slit and three-slit aswell with a wall at x = 0.8.
 
 ### Content list
 - `main.cpp` : Main program to run different cases.
@@ -15,7 +15,7 @@ g++
 
 Compile (Linux):
 ```sh
-g++ main.cpp src/simulate_schrodinger.cpp -I include -std=c++14 -larmadillo -o main
+g++ main.cpp -I include -std=c++11 -larmadillo -o main Run: ./main
 ```
 
 Run program with:
@@ -26,6 +26,11 @@ Run program with:
 Produce plots with:
 ```sh
 python plot.py
+```
+
+Produce simulations with:
+```sh
+python/python3 common.py
 ```
 
 ### Dependencies
