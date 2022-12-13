@@ -49,7 +49,6 @@ def error_plot(data, plot_label, anim_label):
     # plt.hlines(y=0, xmin=0, xmax=T, linestyles='dashed', colors='k')
 
 def prob_detectorsheet(data, x_idx, save_label):
-    print(data.shape)
     data_x = data[-1, x_idx, :]
     p_data_x = np.real(np.multiply(data_x, np.conj(data_x)))
 
