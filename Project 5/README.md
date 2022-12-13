@@ -34,4 +34,4 @@ python plot.py
 - GNU g++ version 12
 
 ### Notes
-
+Probability errors are computer dependent! You may see different results, based on what hardware you are running.
