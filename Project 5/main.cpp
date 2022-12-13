@@ -1,8 +1,5 @@
 # include "simulate_schrodinger.hpp"
 
-// MacOS: CPATH=/opt/homebrew/include LIBRARY_PATH=/opt/homebrew/lib g++ main.cpp src/* -I include -std=c++11 -larmadillo -o main
-// Linux run: g++ main.cpp src/* -I include -std=c++11 -larmadillo -o main; ./main
-
 int main(){
     
     // Declare variables
