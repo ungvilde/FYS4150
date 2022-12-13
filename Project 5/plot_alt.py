@@ -22,11 +22,15 @@ params = {
 
 plt.rcParams.update(params)
 
-def run_animations(data):
+def initalize_data(data):
     data = load(data)
-    data_conj = np.conj(data) # complex conjugate of U_n
+    print(data.shape)
+    data_conj = np.conj(data)   # complex conjugate of U_n
     p_data = np.multiply(data, data_conj) # probabilities
-    animate(np.real(p_data), h=h, T=T, dt=dt)
+    return p_data
+
+def run_animations(p_data, label):
+    animate(np.real(p_data), label + '.mp4', h=h, T=T, dt=dt)
 
 # data = pa.cx_mat()
 # data.load("data/potential_1_slit.bin", pa.arma_binary)
@@ -34,13 +38,10 @@ def run_animations(data):
 # data = np.real(data)
 # colormap(data, fig_label="Potential", save=True, save_label="potenial_1_slits")
 
-def error_plot(data, label):
-    data = load(data)
-    print(data.shape)
-    data_conj = np.conj(data) # complex conjugate of U_n
-    p_data = np.multiply(data, data_conj) # probabilities
+def error_plot(data, plot_label, anim_label):
+    p_data = initalize_data(data)
     if user_input == "y":
-        run_animations(p_data)
+        run_animations(p_data, anim_label)
     
     total_grid_prob = []
     for i in range(N_timesteps):
@@ -48,12 +49,12 @@ def error_plot(data, label):
     
     error = np.array(total_grid_prob) - 1
     time = np.arange(0, T, step=dt)
-    plt.plot(time, error, label = label)
+    plt.plot(time, error, label = plot_label, linestyle='dotted')
     # plt.hlines(y=0, xmin=0, xmax=T, linestyles='dashed', colors='k')
 
 plt.figure(figsize=(9*cm,7*cm))
-error_plot("data/problem7partA.bin", "No barrier")
-error_plot("data/problem7partB.bin", "Double slit barrier")
+error_plot("data/problem7partA.bin", "No barrier", "anim/no_barrier")
+error_plot("data/problem7partB.bin", "Double slit barrier", "anim/double_slit_barrier")
 plt.xlabel("Time"), plt.ylabel("Error")
 plt.legend(), plt.tight_layout(), plt.grid()
 plt.savefig("figs/prob_error.pdf")
@@ -61,8 +62,6 @@ plt.savefig("figs/prob_error.pdf")
 data = load("data/problem8.bin") 
 data_conj = np.conj(data) # complex conjugate of U_n
 p_data = np.multiply(data, data_conj) # probabilities
-if user_input == "y":
-    run_animations("data/problem8.bin")
 colormap(np.real(p_data[n]), fig_label="Probability", save_label="prob_T0.001")
 colormap(np.real(p_data[0]), fig_label="Probability", save_label="prob_T0.0")
 colormap(np.real(p_data[-1]), fig_label="Probability", save_label="prob_T0.002")
@@ -92,14 +91,18 @@ def prob_detectorsheet(data, x_idx, save_label):
 
 prob_detectorsheet(data, x_idx, "figs/cond_prob_x0.8.pdf")
 if user_input == "y":
-    run_animations(data)
+    run_animations(p_data, label="anim/problem_9_twoslits")
 
-data = load("data/problem9_3_slits.bin") 
+data = load("data/problem9_3_slits.bin")
+data_conj = np.conj(data) # complex conjugate of U_n
+p_data = np.multiply(data, data_conj) # probabilities
 prob_detectorsheet(data, x_idx, "figs/cond_prob_x0.8_3slits.pdf")
 if user_input == "y":
-    run_animations(data)
+    run_animations(p_data, label="anim/problem_9_threeslits")
 
-data = load("data/problem9_1_slit.bin") 
+data = load("data/problem9_1_slit.bin")
+data_conj = np.conj(data) # complex conjugate of U_n
+p_data = np.multiply(data, data_conj) # probabilities
 prob_detectorsheet(data, x_idx, "figs/cond_prob_x0.8_1slit.pdf")
 if user_input == "y":
-    run_animations(data)
+    run_animations(p_data, label="anim/problem_9_oneslit")
