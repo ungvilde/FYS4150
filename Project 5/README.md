@@ -7,6 +7,7 @@ We wanted to see the quantum effects of a particle moving through two slits. Thi
 - `plot.py` : Python script to vizualise the results.
 - `src/` : Folder containing the source code.
 - `include/` : Folder containing the header files.
+- `anim/` : Folder containing the animations, required in directory to compile animations.
 
 ### Run instructions (OSX and Linux)
 Compile (OSX):
@@ -23,9 +24,16 @@ Compile and run (Linux):
 g++ main.cpp src/* -I include -std=c++11 -larmadillo -o main; ./main
 ```
 
-Produce plots with:
+Produce only plots with:
 ```sh
 python plot.py
+> Compile animations? (y/n): any input
+```
+
+Produce plots and animations:
+```sh
+python plot.py
+> Compile animations? (y/n): y
 ```
 
 ### Dependencies
