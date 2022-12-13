@@ -3,6 +3,7 @@ We wanted to see the quantum effects of a particle moving through two slits. Thi
 
 ### Content list
 - `main.cpp` : Main program to run different cases.
+- `common.py` : Declaration of python functions for vizualisation.
 - `plot.py` : Python script to vizualise the results.
 - `src/` : Folder containing the source code.
 - `include/` : Folder containing the header files.
@@ -26,11 +27,6 @@ Run program with:
 Produce plots with:
 ```sh
 python plot.py
-```
-
-Produce simulations with:
-```sh
-python/python3 common.py
 ```
 
 ### Dependencies
