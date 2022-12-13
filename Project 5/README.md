@@ -13,15 +13,14 @@ Compile (OSX):
 ```sh
 g++
 ```
+Run program with (OSX):
+```sh
+./main
+```
 
 Compile and run (Linux):
 ```sh
 g++ main.cpp src/* -I include -std=c++11 -larmadillo -o main; ./main
-```
-
-Run program with:
-```sh
-./main
 ```
 
 Produce plots with:
