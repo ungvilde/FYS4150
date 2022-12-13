@@ -8,6 +8,9 @@ We wanted to see the quantum effects of a particle moving through two slits. Thi
 - `src/` : Folder containing the source code.
 - `include/` : Folder containing the header files.
 - `anim/` : Folder containing the animations, required in directory to compile animations.
+- `data/` : Folder containing all binary files created by the program.
+- `figs/` : Output folder for the generated plots.
+- `archive/` : Old code not required for running the program.
 
 ### Run instructions (OSX and Linux)
 Compile (OSX):
