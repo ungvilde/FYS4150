@@ -13,9 +13,9 @@ Compile (OSX):
 g++
 ```
 
-Compile (Linux):
+Compile and run (Linux):
 ```sh
-g++ main.cpp -I include -std=c++11 -larmadillo -o main Run: ./main
+g++ main.cpp src/* -I include -std=c++11 -larmadillo -o main; ./main
 ```
 
 Run program with:
@@ -35,7 +35,7 @@ python/python3 common.py
 
 ### Dependencies
 - Armadillo 11.3
-- Python 3.11
+- Python 3
 - GNU g++ version 12
 
 ### Notes
