@@ -9,7 +9,10 @@ data = pa.cx_cube()
 
 x_idx = int(0.8 / h)   # x index where the detector is located
 
-user_input = input("Compile animations? (y/n): ")
+if len(sys.argv) > 1:
+    user_input = sys.argv[1]    # (y/any input) input from user
+else:
+    user_input = None
 
 cm = 1/2.54
 params = {
