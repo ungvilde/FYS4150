@@ -7,7 +7,7 @@ N_timesteps = int(T / dt)
 n = int(0.001/dt)
 data = pa.cx_cube()
 
-x_idx = int(0.85 / h)   # x index where the detector is located
+x_idx = int(0.8 / h)   # x index where the detector is located
 
 user_input = input("Compile animations? (y/n): ")
 
