@@ -29,17 +29,19 @@ g++ main.cpp src/* -I include -std=c++11 -larmadillo -o main; ./main
 
 Produce only plots with:
 ```sh
-python plot.py
+python plot.py OR python3 plot.py
 ```
 
 Produce plots and animations with:
 ```sh
-python plot.py y
+python plot.py y OR python plot.py y
 ```
 
 ### Dependencies
 - Armadillo 11.3
 - Python 3
+  - FFMPEG
+  - PYARMA
 - GNU g++ version 12
 
 ### Notes
