@@ -51,7 +51,7 @@ def colormap(data, fig_label, save_label, h=0.005, save=True):
     cbar.ax.tick_params(labelsize=fontsize)
     plt.tight_layout()
     if save:
-        plt.savefig("figs/colormap_" + save_label + ".pdf")
+        plt.savefig("colormap_" + save_label + ".pdf")
 
 
 def animate(data, anim_label, h, dt, T):
