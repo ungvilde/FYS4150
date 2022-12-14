@@ -24,15 +24,15 @@ plt.rcParams.update(params)
 
 # Plot the total probability error
 plt.figure(figsize=(9*cm,7*cm))
-error_plot("data/problem7partA.bin", "No barrier", "anim/no_barrier")
-error_plot("data/problem7partB.bin", "Double slit barrier", "anim/double_slit_barrier")
+error_plot("problem7partA.bin", "No barrier", "no_barrier")
+error_plot("problem7partB.bin", "Double slit barrier", "double_slit_barrier")
 plt.xlabel("Time"), plt.ylabel("Error")
 plt.legend(), plt.tight_layout(), plt.grid()
-plt.savefig("figs/prob_error.pdf")
+plt.savefig("prob_error.pdf")
 
 
 # Plot the double slit experiment at t = 0, 0.001 and 0.002
-p_data, data = initalize_data("data/problem8.bin")
+p_data, data = initalize_data("problem8.bin")
 colormap(np.real(p_data[0]), fig_label="Probability", save_label="prob_T0.0")
 colormap(np.real(p_data[n]), fig_label="Probability", save_label="prob_T0.001")
 colormap(np.real(p_data[-1]), fig_label="Probability", save_label="prob_T0.002")
@@ -47,16 +47,16 @@ colormap(np.sqrt(abs(np.imag(data[-1]))), fig_label="$\sqrt{|{Im(U^n)}|}$", save
 
 
 # Plot probability at the detector sheet placed at x = 0.8 and animate the output
-prob_detectorsheet(data, x_idx, "figs/cond_prob_x0.8.pdf")
+prob_detectorsheet(data, x_idx, "cond_prob_x0.8.pdf")
 if user_input == "y":
-    run_animations(p_data, label="anim/problem_8")
+    run_animations(p_data, label="problem_8")
 
-p_data, data = initalize_data("data/problem9_3_slits.bin")
-prob_detectorsheet(data, x_idx, "figs/cond_prob_x0.8_3slits.pdf")
+p_data, data = initalize_data("problem9_3_slits.bin")
+prob_detectorsheet(data, x_idx, "cond_prob_x0.8_3slits.pdf")
 if user_input == "y":
-    run_animations(p_data, label="anim/problem_9_threeslits")
+    run_animations(p_data, label="problem_9_threeslits")
 
-p_data, data = initalize_data("data/problem9_1_slit.bin")
-prob_detectorsheet(data, x_idx, "figs/cond_prob_x0.8_1slit.pdf")
+p_data, data = initalize_data("problem9_1_slit.bin")
+prob_detectorsheet(data, x_idx, "cond_prob_x0.8_1slit.pdf")
 if user_input == "y":
-    run_animations(p_data, label="anim/problem_9_oneslit")
+    run_animations(p_data, label="problem_9_oneslit")
