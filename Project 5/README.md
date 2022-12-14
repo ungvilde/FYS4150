@@ -34,7 +34,7 @@ python plot.py OR python3 plot.py
 
 Produce plots and animations with:
 ```sh
-python plot.py y OR python plot.py y
+python plot.py y OR python3 plot.py y
 ```
 
 ### Dependencies
